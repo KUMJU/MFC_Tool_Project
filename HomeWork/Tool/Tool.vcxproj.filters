@@ -64,6 +64,12 @@
     <Filter Include="04.Etc\02.FileInfo">
       <UniqueIdentifier>{8fe636d6-91c4-4d17-bbdc-ce0cf33476f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Manager\02. TimeMgr">
+      <UniqueIdentifier>{ce07c20b-8277-44da-9b29-5a9fe55ebec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.View\02.MiniAnimView">
+      <UniqueIdentifier>{4808ba46-38c1-42be-bb90-a1aa54afd753}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tool.h">
@@ -123,6 +129,12 @@
     <ClInclude Include="FileInfo.h">
       <Filter>04.Etc\02.FileInfo</Filter>
     </ClInclude>
+    <ClInclude Include="TimeMgr.h">
+      <Filter>03.Manager\02. TimeMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniAnimView.h">
+      <Filter>01.View\02.MiniAnimView</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tool.cpp">
@@ -172,6 +184,12 @@
     </ClCompile>
     <ClCompile Include="FileInfo.cpp">
       <Filter>04.Etc\02.FileInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeMgr.cpp">
+      <Filter>03.Manager\02. TimeMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniAnimView.cpp">
+      <Filter>01.View\02.MiniAnimView</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

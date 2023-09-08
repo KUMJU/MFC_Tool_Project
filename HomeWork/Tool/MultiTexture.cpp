@@ -61,6 +61,8 @@ HRESULT CMultiTexture::Insert_Texture(const TCHAR* pFilePath, const TCHAR* pStat
 			return E_FAIL;
 		}
 
+
+
 		m_mapMultiTex[pStateKey].push_back(pTexInfo);
     }
 

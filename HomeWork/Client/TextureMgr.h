@@ -15,6 +15,7 @@ public:
 
 public:
 	HRESULT		Insert_Texture(TEXTYPE eType, const TCHAR* pFilePath, const TCHAR* pObjKey, const TCHAR* pStateKey = L"", const int& iCnt = 0);
+	void		EditTextureInfo(SPRITEINFO _info);
 	void		Release();
 
 private:

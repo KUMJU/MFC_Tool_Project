@@ -14,6 +14,7 @@
 #include "ToolView.h"
 #include "MainFrm.h"
 #include "MiniView.h"
+#include"TimeMgr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -130,11 +131,6 @@ void CToolView::OnInitialUpdate()
 		return;
 	}
 
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(TEX_SINGLE, L"../Texture/Cube.png", L"Cube")))
-	{
-		AfxMessageBox(L"Cube Texture Insert Failed");
-		return;
-	}
 
 	m_pMyTerrain = new CMyTerrain;
 
@@ -173,6 +169,8 @@ void CToolView::OnDestroy()
 
 	CTextureMgr::Get_Instance()->Destroy_Instance();
 	CDevice::Get_Instance()->Destroy_Instance();
+	CTimeMgr::Get_Instance()->Destroy_Instance();
+	
 }
 
 

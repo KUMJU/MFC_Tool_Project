@@ -20,10 +20,22 @@ typedef	struct tagFrame
 typedef struct tagTexture
 {
 	LPDIRECT3DTEXTURE9		pTexture;   // 컴 객체
-
 	D3DXIMAGE_INFO			tImgInfo;	// 구조체
 
 }TEXINFO;
+
+
+//스프라이트(유닛) 툴에서 저장해주는 구조체 
+struct SPRITEINFO {
+	int		iCount;
+	float	fSpeed;
+	CString strObjKey;
+	CString strStateKey;
+	int iR;
+	int iG;
+	int iB;
+	int iA;
+};
 
 typedef struct tagTile
 {
