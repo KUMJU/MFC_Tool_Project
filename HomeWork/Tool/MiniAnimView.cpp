@@ -55,7 +55,7 @@ void CMiniAnimView::OnDraw(CDC* pDC)
 	GetClientRect(&rc);
 
 	D3DXMatrixIdentity(&matWorld);
-	D3DXMatrixScaling(&matScale, 5.f, 4.f, 0.f);
+	D3DXMatrixScaling(&matScale, 4.f, 3.f, 0.f);
 	D3DXMatrixTranslation(&matTrans,
 		350.f,
 		350.f,

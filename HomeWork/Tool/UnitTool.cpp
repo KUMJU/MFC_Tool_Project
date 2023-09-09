@@ -53,6 +53,10 @@ void CUnitTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_TEXT1, m_strTexType);
 	DDX_Control(pDX, IDC_BUTTON3, m_PlayButton);
 	DDX_Control(pDX, IDC_EDIT8, m_SpeedControl);
+	DDX_Control(pDX, IDC_SLIDER1, m_SliderA);
+	DDX_Control(pDX, IDC_SLIDER2, m_SliderR);
+	DDX_Control(pDX, IDC_SLIDER3, m_SliderG);
+	DDX_Control(pDX, IDC_SLIDER4, m_SliderB);
 }
 
 
@@ -68,6 +72,8 @@ BEGIN_MESSAGE_MAP(CUnitTool, CDialog)
 	ON_EN_CHANGE(IDC_EDIT2, &CUnitTool::OnRedChange)
 	ON_EN_CHANGE(IDC_EDIT3, &CUnitTool::OnGreenChange)
 	ON_EN_CHANGE(IDC_EDIT4, &CUnitTool::OnBlueChange)
+//	ON_WM_VSCROLL()
+	ON_WM_HSCROLL()
 END_MESSAGE_MAP()
 
 
@@ -114,11 +120,34 @@ BOOL CUnitTool::OnInitDialog()
 	pObject = RUNTIME_CLASS(CMiniAnimView);
 	m_pAnimView = (CMiniAnimView*)pObject->CreateObject();
 
+	CRect rc2;
+	GetClientRect(&rc2);
+
 	if (!m_pAnimView->Create(NULL, NULL, AFX_WS_DEFAULT_VIEW,
-		CRect(430, 50, 630, 250), this, AFX_IDW_PANE_FIRST, NULL))
+		CRect(rc2.right- rc2.right *0.4, rc2.top+ 20.f , rc2.right-20.f, rc.top + rc2.right * 0.4), this, AFX_IDW_PANE_FIRST, NULL))
 	{
 		return -1;
 	}
+
+	m_SliderA.SetRange(0, 255, 0);
+	m_SliderR.SetRange(0, 255, 0);
+	m_SliderG.SetRange(0, 255, 0);
+	m_SliderB.SetRange(0, 255, 0);
+
+	m_SliderA.SetLineSize(1);
+	m_SliderR.SetLineSize(1);
+	m_SliderG.SetLineSize(1);
+	m_SliderB.SetLineSize(1);
+
+	m_SliderA.SetTicFreq(10);
+	m_SliderR.SetTicFreq(10);
+	m_SliderG.SetTicFreq(10);
+	m_SliderB.SetTicFreq(10);
+
+	m_SliderA.SetPageSize(10);
+	m_SliderR.SetPageSize(10);
+	m_SliderG.SetPageSize(10);
+	m_SliderB.SetPageSize(10);
 
 	return TRUE;
 }
@@ -184,10 +213,8 @@ void CUnitTool::OnTvnSelchangedTree1(NMHDR* pNMHDR, LRESULT* pResult)
 	if (!m_Tree.ItemHasChildren(currentItem)) {
 		//최하단 디렉토리 = 오브젝트키가 될 아이템을 선택했을 때
 		CString ItemName = m_Tree.GetItemText(currentItem);
+		m_ObjKey = m_Tree.GetItemText(currentItem);
 		SetStateKeyList(ItemName, currentItem);
-	}
-	else {
-		//입력창 초기화
 	}
 
 	*pResult = 0;
@@ -248,7 +275,7 @@ void CUnitTool::SettingStateList(CString _objKey, HTREEITEM _item)
 			continue;
 
 		SPRITEINFO* newSprite = new SPRITEINFO;
-		newSprite->fSpeed = 0.2f;
+		newSprite->fSpeed = 0.1f;
 		newSprite->iA = 255;
 		newSprite->iR = 255;
 		newSprite->iG = 255;
@@ -259,8 +286,6 @@ void CUnitTool::SettingStateList(CString _objKey, HTREEITEM _item)
 		m_tempVec.push_back(newSprite);
 
 		CString filePath = CFileInfo::ConvertRelativePath(Finder.GetFilePath());
-		//디렉토리 하단 파일을 읽어서 image 세팅, 초기에 세팅하면 다신 안 불러와도 된다
-
 		newSprite->iCount=SetStateImg(filePath, Finder.GetFileName() ,_objKey);
 	}
 
@@ -304,13 +329,6 @@ int CUnitTool::SetStateImg(CString _path, CString _stateKey, CString _objKey)
 
 }
 
-void CUnitTool::MoveFrame()
-{
-	
-
-}
-
-
 //스프라이트 저장하기 버튼
 void CUnitTool::OnBnClickedButton1()
 {
@@ -344,6 +362,11 @@ void CUnitTool::OnSelectList(NMHDR* pNMHDR, LRESULT* pResult)
 			m_iB = it->iB;
 			fSpeed = it->fSpeed;
 			m_ObjKey = ObjKey;
+
+			m_SliderA.SetPos(m_iA);
+			m_SliderR.SetPos(m_iR);
+			m_SliderG.SetPos(m_iG);
+			m_SliderB.SetPos(m_iB);
 
 			m_iImgCount = it->iCount;
 			m_fAnimTime = it->fSpeed;
@@ -394,9 +417,53 @@ void CUnitTool::OnAnimPlay()
 void CUnitTool::OnDropDownSelChange()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
 	CString tempStr;
 	m_ComboBox.GetLBText(m_ComboBox.GetCurSel(), tempStr);
+	
+	CString objKey = m_ObjKey;
+	if (L"" == objKey)
+		return;
+	
 
+	auto iter = m_SpriteMap.find(objKey);
+
+	for (auto& it : iter->second) {
+		if (tempStr == it->strStateKey) {
+			m_iA = it->iA;
+			m_iR = it->iR;
+			m_iG = it->iG;
+			m_iB = it->iB;
+			fSpeed = it->fSpeed;
+			m_ObjKey = objKey;
+
+			m_SliderA.SetPos(m_iA);
+			m_SliderR.SetPos(m_iR);
+			m_SliderG.SetPos(m_iG);
+			m_SliderB.SetPos(m_iB);
+
+			m_iImgCount = it->iCount;
+			m_fAnimTime = it->fSpeed;
+
+			if (1 == m_iImgCount) {
+				m_strTexType = "SINGLE";
+			}
+			else {
+				m_strTexType = "MULTI";
+			}
+
+			m_currentFrame.fMax = (float)m_iImgCount;
+			m_currentFrame.fFrame = 0.f;
+			m_pAnimView->SetAnimInfo(*it);
+
+			break;
+		}
+	}
+	m_pAnimView->SelectSprite(true);
+
+	UpdateData(FALSE);
+	
 }
 
 
@@ -514,4 +581,70 @@ void CUnitTool::OnBlueChange()
 			m_pAnimView->SetAnimInfo(*it);
 		}
 	}
+}
+
+//RGBA 슬라이더
+void CUnitTool::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	int iCurPos = 0;
+	UpdateData(TRUE);
+
+	CString objKey = m_ObjKey;
+	int currentCol = m_ComboBox.GetCurSel();
+	CString stateKey;
+	m_ComboBox.GetLBText(currentCol, stateKey);
+
+	auto iter = m_SpriteMap.find(objKey);
+
+	if ((CScrollBar*)&m_SliderA == pScrollBar) {
+
+		iCurPos = m_SliderA.GetPos();
+		m_iA = iCurPos;
+
+		for (auto& it : iter->second) {
+			if (it->strStateKey == stateKey) {
+				it->iA = iCurPos;
+				m_pAnimView->SetAnimInfo(*it);
+			}
+		}
+	}
+	else if ((CScrollBar*)&m_SliderR == pScrollBar) {
+		iCurPos = m_SliderR.GetPos();
+		m_iR = iCurPos;
+
+		for (auto& it : iter->second) {
+			if (it->strStateKey == stateKey) {
+				it->iR = iCurPos;
+				m_pAnimView->SetAnimInfo(*it);
+			}
+		}
+	}
+	else if ((CScrollBar*)&m_SliderG == pScrollBar) {
+		iCurPos = m_SliderG.GetPos();
+		m_iG = iCurPos;
+
+		for (auto& it : iter->second) {
+			if (it->strStateKey == stateKey) {
+				it->iG = iCurPos;
+				m_pAnimView->SetAnimInfo(*it);
+			}
+		}
+	}
+	else if ((CScrollBar*)&m_SliderB == pScrollBar) {
+		iCurPos = m_SliderB.GetPos();
+		m_iB = iCurPos;
+
+		for (auto& it : iter->second) {
+			if (it->strStateKey == stateKey) {
+				it->iB = iCurPos;
+				m_pAnimView->SetAnimInfo(*it);
+			}
+		}
+	}
+
+
+	UpdateData(FALSE);
+
+	CDialog::OnHScroll(nSBCode, nPos, pScrollBar);
 }

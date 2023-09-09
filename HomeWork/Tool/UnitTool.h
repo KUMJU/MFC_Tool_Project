@@ -45,7 +45,6 @@ public:
 	void SetStateKeyList(CString _objKey, HTREEITEM _item);  // 특정 오브젝트 키를 선택했을 때 맵에 있는 자료를 꺼내 채워주는 함수
 	void SettingStateList(CString _objKey, HTREEITEM _item); // 특정 오브젝트 키의 맵이 비어있을 때 채워주는 함수
 	int SetStateImg(CString _path , CString _stateKey, CString _objKey);
-	void MoveFrame();
 	//void ChangeStateKeyItem(); //스테이트키 바뀔때를 따로 나눠야 편할듯
 
 	//트리뷰 컨트롤러
@@ -77,6 +76,10 @@ public:
 	CButton m_PlayButton;
 	CEdit m_SpeedControl; //스피드 입력칸 컨트롤러
 
+	CSliderCtrl m_SliderA;
+	CSliderCtrl m_SliderR;
+	CSliderCtrl m_SliderG;
+	CSliderCtrl m_SliderB;
 
 private:
 	
@@ -88,4 +91,6 @@ public:
 	afx_msg void OnRedChange();
 	afx_msg void OnGreenChange();
 	afx_msg void OnBlueChange();
+//	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 };
