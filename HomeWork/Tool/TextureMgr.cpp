@@ -68,7 +68,7 @@ HRESULT CTextureMgr::Insert_Texture(TEXTYPE eType, const TCHAR* pFilePath, const
 	return S_OK;
 }
 
-HRESULT CTextureMgr::ReadImgPath(const wstring& wstrPath, list<SPRITEINFO*>* _infoList)
+HRESULT CTextureMgr::ReadImgPath(const wstring& wstrPath, map<CString, vector<SPRITEINFO*>>* _infoList)
 {
 	wifstream fin;
 	fin.open(wstrPath, ios::in);

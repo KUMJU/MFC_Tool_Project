@@ -16,7 +16,7 @@ public:
 
 public:
 	HRESULT		Insert_Texture(TEXTYPE eType, const TCHAR* pFilePath, const TCHAR* pObjKey, const TCHAR* pStateKey = L"", const int& iCnt = 0);
-	HRESULT		ReadImgPath(const wstring& wstrPath , list<SPRITEINFO*>* _infoList);
+	HRESULT		ReadImgPath(const wstring& wstrPath , map<CString, vector<SPRITEINFO*>>* _infoList);
 	void		Release();
 
 private:

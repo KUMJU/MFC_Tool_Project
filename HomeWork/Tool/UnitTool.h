@@ -84,7 +84,6 @@ public:
 private:
 	
 	CMiniAnimView* m_pAnimView; //애니메이션 미리보기창
-
 public:
 	afx_msg void OnSpeedChange();
 	afx_msg void OnAlphaChange();

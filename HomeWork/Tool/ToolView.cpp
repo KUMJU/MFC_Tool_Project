@@ -135,7 +135,7 @@ void CToolView::OnInitialUpdate()
 
 	CTerrainMgr::Get_Instance()->Initialize(this);
 
-	CTextureMgr::Get_Instance()->ReadImgPath(L"../Data/ImgPath.txt");
+	CTextureMgr::Get_Instance()->ReadImgPath(L"../Data/ImgPath.txt" , &m_pAnimInfo);
 }
 
 

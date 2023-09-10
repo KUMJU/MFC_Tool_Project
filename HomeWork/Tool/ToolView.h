@@ -55,7 +55,7 @@ public:
 	int			m_iDrawOption;
 	int			m_iDrawMode;
 
-	list<SPRITEINFO*> m_pAnimInfo;
+	map<CString, vector<SPRITEINFO*>> m_pAnimInfo;
 
 };
 

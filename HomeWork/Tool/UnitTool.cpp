@@ -92,6 +92,7 @@ void CUnitTool::OnDestroy()
 	m_SpriteMap.clear();
 	CDialog::OnDestroy();
 
+
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 }
 
@@ -317,11 +318,6 @@ int CUnitTool::SetStateImg(CString _path, CString _stateKey, CString _objKey )
 
 	}
 
-	fileName.Replace(L"0.png", L"");
-	CString newPath = OriginPath +"\\" + fileName + "%d.png";
-
-	CTextureMgr::Get_Instance()->Insert_Texture(TEX_MULTI, newPath, _objKey, _stateKey, iCount);
-
 	return iCount;
 
 }
@@ -330,6 +326,49 @@ int CUnitTool::SetStateImg(CString _path, CString _stateKey, CString _objKey )
 void CUnitTool::OnBnClickedButton1()
 {
 
+	CFileDialog Dlg(FALSE, L"dat", L"*.dat",
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+		L"Data File(*.dat) | *.dat ||", this);
+
+	TCHAR szPath[MAX_PATH] = L"";
+
+	GetCurrentDirectory(MAX_PATH, szPath);
+	PathRemoveFileSpec(szPath);
+	lstrcat(szPath, L"\\Data\\UnitData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (IDOK == Dlg.DoModal())
+	{
+		CString str = Dlg.GetPathName().GetString();
+		const TCHAR* pGetPath = str.GetString();
+
+		HANDLE hFile = CreateFile(pGetPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
+		if (INVALID_HANDLE_VALUE == hFile)
+			return;
+
+		DWORD dwByte(0);
+
+		
+
+		for (auto& iter : m_SpriteMap) {
+			for (auto& it : iter.second) {
+
+				WriteFile(hFile, &(it->strObjKey), sizeof(it->strObjKey.GetLength()) * sizeof(TCHAR), &dwByte, nullptr);
+				WriteFile(hFile, &(it->strStateKey), sizeof(it->strStateKey.GetLength()) * sizeof(TCHAR), &dwByte, nullptr);
+				WriteFile(hFile, &(it->fSpeed), sizeof(float), &dwByte, nullptr);
+				WriteFile(hFile, &(it->iA), sizeof(float), &dwByte, nullptr);
+				WriteFile(hFile, &(it->iR), sizeof(int), &dwByte, nullptr);
+				WriteFile(hFile, &(it->iG), sizeof(int), &dwByte, nullptr);
+				WriteFile(hFile, &(it->iB), sizeof(int), &dwByte, nullptr);
+				WriteFile(hFile, &(it->iCount), sizeof(int), &dwByte, nullptr);
+
+			}
+		}
+
+		CloseHandle(hFile);
+
+	}
 
 
 }
