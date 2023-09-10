@@ -64,3 +64,8 @@ void CSingleTexture::Release()
     m_pTexInfo->pTexture->Release();
     Safe_Delete(m_pTexInfo);
 }
+
+int CSingleTexture::Get_TexCount(const TCHAR* pStateKey)
+{
+    return 1;
+}

@@ -14,7 +14,7 @@ CMyTerrain::~CMyTerrain()
     Release();
 }
 
-void CMyTerrain::Tile_Change(const D3DXVECTOR3& vPos, const int& iDrawID)
+void CMyTerrain::Tile_Change(const D3DXVECTOR3& vPos, int iDrawID, int iDrawOption)
 {
     int iIndex = Get_TileIndex(vPos);
 
@@ -132,7 +132,7 @@ bool CMyTerrain::Picking_Dot(const D3DXVECTOR3& vPos, const int& iIndex)
     return true;
 }
 
-HRESULT CMyTerrain::Initialize()
+HRESULT CMyTerrain::Initialize(int iBgCount, int iTileCntX, int iTileCntY)
 {
     if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(TEX_MULTI, L"../Texture/Stage/Terrain/Tile/Tile%d.png", L"Terrain", L"Tile", 36)))
     {
@@ -170,8 +170,39 @@ void CMyTerrain::Render()
     D3DXMATRIX  matWorld, matScale, matTrans;
 
     TCHAR   szBuff[MIN_STR] = L"";
-    int     iIndex = 0;
     RECT    rc{};
+
+    {
+        D3DXMatrixIdentity(&matWorld);
+        D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+        D3DXMatrixTranslation(&matTrans,
+            -m_pMainView->GetScrollPos(0),
+            -m_pMainView->GetScrollPos(1),
+            0.f);
+
+        matWorld = matScale * matTrans;
+
+        GetClientRect(m_pMainView->m_hWnd, &rc);
+
+        float fX = WINCX / float(rc.right - rc.left);
+        float fY = WINCY / float(rc.bottom - rc.top);
+
+        Set_Ratio(&matWorld, fX, fY);
+
+        CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+
+        const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Map", L"map", m_iBackImgCount);
+
+        float fCenterX = pTexInfo->tImgInfo.Width * 0.5f;
+        float fCenterY = pTexInfo->tImgInfo.Height * 0.5f;
+
+        CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
+            nullptr,
+            &D3DXVECTOR3(0.f, 0.f, 0.f),
+            nullptr,
+            D3DCOLOR_ARGB(255, 255, 255, 255));
+
+    }
 
     for (auto& iter : m_vecTile)
     {
@@ -193,63 +224,52 @@ void CMyTerrain::Render()
 
         CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
 
-        const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Terrain", L"Tile", iter->byDrawID);
+        const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"TILE", L"Tile", iter->byDrawID);
 
         float fCenterX = pTexInfo->tImgInfo.Width * 0.5f;
         float fCenterY = pTexInfo->tImgInfo.Height * 0.5f;
 
         CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
             nullptr,
-            &D3DXVECTOR3(fCenterX,fCenterY,0.f),
+            &D3DXVECTOR3(fCenterX, fCenterY, 0.f),
             nullptr,
-            D3DCOLOR_ARGB(255,255,255,255));
+            D3DCOLOR_ARGB(255, 255, 255, 255));
 
-        // 타일 위에 번호 띄우기
-        swprintf_s(szBuff, L"%d", iIndex);
-
-        CDevice::Get_Instance()->Get_Font()->DrawTextW(CDevice::Get_Instance()->Get_Sprite(),
-            szBuff,
-            lstrlen(szBuff),
-            nullptr,
-            0,
-            D3DCOLOR_ARGB(255, 0, 255, 255));
-
-        ++iIndex;
     }
 }
 
 void CMyTerrain::Mini_Render()
 {
-    D3DXMATRIX		matWorld, matScale, matTrans;
+    //D3DXMATRIX		matWorld, matScale, matTrans;
 
-    TCHAR		szBuf[MIN_STR] = L"";
+    //TCHAR		szBuf[MIN_STR] = L"";
 
-    for (auto& iter : m_vecTile)
-    {
-        D3DXMatrixIdentity(&matWorld);
-        D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
-        D3DXMatrixTranslation(&matTrans,
-            iter->vPos.x,
-            iter->vPos.y,
-            iter->vPos.z);
+    //for (auto& iter : m_vecTile)
+    //{
+    //    D3DXMatrixIdentity(&matWorld);
+    //    D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+    //    D3DXMatrixTranslation(&matTrans,
+    //        iter->vPos.x,
+    //        iter->vPos.y,
+    //        iter->vPos.z);
 
-        matWorld = matScale * matTrans;
+    //    matWorld = matScale * matTrans;
 
-        Set_Ratio(&matWorld, 0.3f, 0.3f);
+    //    Set_Ratio(&matWorld, 0.3f, 0.3f);
 
-        CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+    //    CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
 
-        const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Terrain", L"Tile", iter->byDrawID);
+    //    const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Terrain", L"Tile", iter->byDrawID);
 
-        float	fCenterX = pTexInfo->tImgInfo.Width / 2.f;
-        float	fCenterY = pTexInfo->tImgInfo.Height / 2.f;
+    //    float	fCenterX = pTexInfo->tImgInfo.Width / 2.f;
+    //    float	fCenterY = pTexInfo->tImgInfo.Height / 2.f;
 
-        CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
-            nullptr,
-            &D3DXVECTOR3(fCenterX, fCenterY, 0.f),
-            nullptr,
-            D3DCOLOR_ARGB(255, 255, 255, 255));
-    }
+    //    CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
+    //        nullptr,
+    //        &D3DXVECTOR3(fCenterX, fCenterY, 0.f),
+    //        nullptr,
+    //        D3DCOLOR_ARGB(255, 255, 255, 255));
+    //}
 }
 
 void CMyTerrain::Release()
@@ -257,4 +277,64 @@ void CMyTerrain::Release()
     for_each(m_vecTile.begin(), m_vecTile.end(), CDeleteObj());
     m_vecTile.clear();
     m_vecTile.shrink_to_fit();
+}
+
+HRESULT CMyTerrain::Save_Data(const wstring& DataSavePath)
+{
+    HANDLE hFile = CreateFile(DataSavePath.c_str(), GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
+    if (INVALID_HANDLE_VALUE == hFile)
+        return E_FAIL;
+
+    if (m_vecTile.empty())
+        return E_FAIL;
+
+    DWORD dwByte(0);
+
+    WriteFile(hFile, &m_iBackImgCount, sizeof(int), &dwByte, nullptr);
+    WriteFile(hFile, &m_iTileCntX, sizeof(int), &dwByte, nullptr);
+    WriteFile(hFile, &m_iTileCntY, sizeof(int), &dwByte, nullptr);
+
+    for (auto& iter : m_vecTile)
+        WriteFile(hFile, iter, sizeof(TILE), &dwByte, nullptr);
+
+    CloseHandle(hFile);
+
+    return S_OK;
+}
+
+HRESULT CMyTerrain::Load_Data(const wstring& wstrMapDataPath)
+{
+    HANDLE hFile = CreateFile(wstrMapDataPath.c_str(), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+    if (INVALID_HANDLE_VALUE == hFile)
+        return E_FAIL;
+
+    DWORD dwByte(0);
+    TILE* pTile = nullptr;
+
+    ReadFile(hFile, &m_iBackImgCount, sizeof(int), &dwByte, nullptr);
+    ReadFile(hFile, &m_iTileCntX, sizeof(int), &dwByte, nullptr);
+    ReadFile(hFile, &m_iTileCntY, sizeof(int), &dwByte, nullptr);
+
+    m_vecTile.reserve(m_iTileCntX * m_iTileCntY);
+
+    while (true)
+    {
+        pTile = new TILE;
+
+        ReadFile(hFile, pTile, sizeof(TILE), &dwByte, nullptr);
+
+        if (0 == dwByte)
+        {
+            Safe_Delete(pTile);
+            break;
+        }
+
+        m_vecTile.push_back(pTile);
+    }
+
+    CloseHandle(hFile);
+
+    return S_OK;
 }

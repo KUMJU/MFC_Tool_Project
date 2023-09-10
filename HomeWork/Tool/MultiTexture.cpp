@@ -77,3 +77,13 @@ void CMultiTexture::Release()
 	});
 	m_mapMultiTex.clear();
 }
+
+int CMultiTexture::Get_TexCount(const TCHAR* pStateKey)
+{
+	auto iter = m_mapMultiTex.find(pStateKey);
+
+	if (iter == m_mapMultiTex.end())
+		return -1;
+
+	return m_mapMultiTex[pStateKey].size();
+}

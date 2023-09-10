@@ -10,13 +10,16 @@
 #include "ToolView.h"
 #include "MyTerrain.h"
 #include "MainFrm.h"
+#include "TerrainMgr.h"
+#include "TextureMgr.h"
 
 // CMapTool 대화 상자
 
 IMPLEMENT_DYNAMIC(CMapTool, CDialog)
 
 CMapTool::CMapTool(CWnd* pParent /*=nullptr*/)
-	: CDialog(IDD_CMapTool, pParent)
+	: CDialog(IDD_CMapTool, pParent), m_SelectedTerrain(nullptr)
+	, m_RadioMode(0)
 {
 
 }
@@ -28,34 +31,41 @@ CMapTool::~CMapTool()
 void CMapTool::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_LIST1, m_ListBox);
+	DDX_Control(pDX, IDC_LIST1, m_TileSelecter);
+	DDX_Control(pDX, IDC_LIST3, SavedMapListBox);
 	DDX_Control(pDX, IDC_PICTURE, m_Picture);
+	DDX_Radio(pDX, IDC_RADIO1, m_RadioMode);
 }
 
 
 BEGIN_MESSAGE_MAP(CMapTool, CDialog)
 	ON_LBN_SELCHANGE(IDC_LIST1, &CMapTool::OnListBox)
+	ON_BN_CLICKED(IDC_BUTTON4, &CMapTool::OnCreateNewMap)
 	ON_WM_DESTROY()
-	ON_WM_DROPFILES()
-	ON_BN_CLICKED(IDC_BUTTON1, &CMapTool::SelectTile)
+	ON_BN_CLICKED(IDC_BUTTON9, &CMapTool::SaveMapData)
+	ON_LBN_SELCHANGE(IDC_LIST3, &CMapTool::OnSelectTerrain)
+	ON_BN_CLICKED(IDC_BUTTON8, &CMapTool::LoadSavedMap)
 END_MESSAGE_MAP()
 
 
 // CMapTool 메시지 처리기
 
-
 void CMapTool::OnListBox()
 {
 	UpdateData(TRUE);
 
+	if (m_RadioMode != 1)
+		return;
+
+	// 미리보기 창 띄우기용
 	CString strFindName;
 
-	int iIndex = m_ListBox.GetCurSel();
+	int iIndex = m_TileSelecter.GetCurSel();
 
 	if (LB_ERR == iIndex)
 		return;
 
-	m_ListBox.GetText(iIndex, strFindName);
+	m_TileSelecter.GetText(iIndex, strFindName);
 
 	auto iter = m_MapPngImg.find(strFindName);
 
@@ -66,53 +76,26 @@ void CMapTool::OnListBox()
 
 	m_strSelectImg = iter->first;
 
-	UpdateData(FALSE);
-}
+	// 메인 뷰에서 타일변경 적용되도록 설정
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+	CToolView* pMainView = dynamic_cast<CToolView*>(pMain->m_MainSplitter.GetPane(0, 1));
 
+	if (nullptr == pMainView)
+		return;
 
-void CMapTool::OnDropFiles(HDROP hDropInfo)
-{
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	UpdateData(TRUE);
-	CDialog::OnDropFiles(hDropInfo);
-
-	TCHAR szFilePath[MAX_PATH] = L"";
-	TCHAR szFileName[MIN_STR] = L"";
-
-	// DragQueryFile : 드롭된 파일의 정보를 얻어오는 함수
-	// 두 번째 매개 변수 : 0xffffffff(-1)을 지정하면 드롭된 파일의 개수를 반환 
-	int iFileCnt = DragQueryFile(hDropInfo, 0xffffffff, nullptr, 0);
-
-	for (int i = 0; i < iFileCnt; ++i)
+	CString cStrNumber = L"";
+	for (int i = 0; i < m_strSelectImg.GetLength(); ++i)
 	{
-		DragQueryFile(hDropInfo, i, szFilePath, MAX_PATH);
-
-		CString strRelative = CFileInfo::ConvertRelativePath(szFilePath);
-		CString strFileName = PathFindFileName(strRelative);
-
-		lstrcpy(szFileName, strFileName.GetString());
-
-		PathRemoveExtension(szFileName);
-		strFileName = szFileName;
-
-		auto iter = m_MapPngImg.find(strFileName);
-
-		if (iter == m_MapPngImg.end())
-		{
-			CImage* pPngImg = new CImage;
-
-			pPngImg->Load(strRelative);
-
-			m_MapPngImg.insert({ strFileName,pPngImg });
-			m_ListBox.AddString(szFileName);
-		}
+		TCHAR tch = m_strSelectImg.GetAt(i);
+		if (tch >= L'0' && tch <= L'9')
+			cStrNumber += tch;
 	}
 
-	Horizontal_Scroll();
-
+	int iTileID = _ttoi(cStrNumber);
+	pMainView->m_iDrawMode = m_RadioMode;
+	pMainView->m_iDrawID = iTileID;
 	UpdateData(FALSE);
 }
-
 
 void CMapTool::OnDestroy()
 {
@@ -130,50 +113,133 @@ void CMapTool::OnDestroy()
 
 void CMapTool::Horizontal_Scroll()
 {
-	CString strFindName;
-	CSize size;
-	int iWidth = 0;
+	//CString strFindName;
+	//CSize size;
+	//int iWidth = 0;
 
-	CDC* pDC = m_ListBox.GetDC();
+	//CDC* pDC = m_ListBox.GetDC();
 
-	for (int i = 0; i < m_ListBox.GetCount(); ++i)
-	{
-		m_ListBox.GetText(i, strFindName);
+	//for (int i = 0; i < m_ListBox.GetCount(); ++i)
+	//{
+	//	m_ListBox.GetText(i, strFindName);
 
-		size = pDC->GetTextExtent(strFindName);
+	//	size = pDC->GetTextExtent(strFindName);
 
-		if (size.cx > iWidth)
-			iWidth = size.cx;
-	}
+	//	if (size.cx > iWidth)
+	//		iWidth = size.cx;
+	//}
 
-	m_ListBox.ReleaseDC(pDC);
+	//m_ListBox.ReleaseDC(pDC);
 
-	// GetHorizontalExtent : 리스트 박스가 가로로 스크롤 할 수 있는 최대 길이를 얻어오는 함수
-	if (iWidth > m_ListBox.GetHorizontalExtent())
-		m_ListBox.SetHorizontalExtent(iWidth);
+	//// GetHorizontalExtent : 리스트 박스가 가로로 스크롤 할 수 있는 최대 길이를 얻어오는 함수
+	//if (iWidth > m_ListBox.GetHorizontalExtent())
+	//	m_ListBox.SetHorizontalExtent(iWidth);
 }
 
 
-void CMapTool::SelectTile()
+void CMapTool::OnCreateNewMap()
 {
-	UpdateData(TRUE);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
-	CToolView* pMainView = dynamic_cast<CToolView*>(pMain->m_MainSplitter.GetPane(0, 1));
+	if (nullptr == m_CreateMapTool.GetSafeHwnd())
+		m_CreateMapTool.Create(IDD_CCreateMapTool);
 
-	if (nullptr == pMainView)
+	m_CreateMapTool.SetMapTool(this);
+	m_CreateMapTool.ShowWindow(SW_SHOW);
+}
+
+
+void CMapTool::SaveMapData()
+{
+	if (m_SelectedTerrain == nullptr) return;
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CFileDialog Dlg(FALSE, L"dat", L"*.dat",
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+		L"Data File(*.dat) | *.dat ||", this);
+
+	TCHAR szPath[MAX_PATH] = L"";
+
+	GetCurrentDirectory(MAX_PATH, szPath);
+	PathRemoveFileSpec(szPath);
+	lstrcat(szPath, L"\\Data\\MapData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (IDOK == Dlg.DoModal())
+	{
+		CString str = Dlg.GetPathName().GetString();
+		const TCHAR* pGetPath = str.GetString();
+
+		m_SelectedTerrain->Save_Data(pGetPath);
+	}
+}
+
+
+void CMapTool::OnSelectTerrain()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CMapTool::LoadSavedMap()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	int iIndex = SavedMapListBox.GetCurSel();
+
+	if (LB_ERR == iIndex)
 		return;
 
-	CString cStrNumber = L"";
-	for (int i = 0; i < m_strSelectImg.GetLength(); ++i)
+	CString mapKey;
+	SavedMapListBox.GetText(iIndex, mapKey);
+	CMyTerrain* pTemp = CTerrainMgr::Get_Instance()->Get_Terrain(mapKey.GetString());
+
+	if (pTemp == nullptr)
+		return;
+	else
 	{
-		TCHAR tch = m_strSelectImg.GetAt(i);
-		if (tch >= L'0' && tch <= L'9')
-			cStrNumber += tch;
+		m_SelectedTerrain = pTemp;
+		CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+		CToolView* pMainView = dynamic_cast<CToolView*>(pMain->m_MainSplitter.GetPane(0, 1));
+		pMainView->m_pMyTerrain = m_SelectedTerrain;
+
+		pMainView->Invalidate();
 	}
 
-	int iTileID = _ttoi(cStrNumber);
-	pMainView->m_iDrawID = iTileID;
+	UpdateData(FALSE);
+}
+
+
+BOOL CMapTool::OnInitDialog()
+{
+	CDialog::OnInitDialog();
+
+	UpdateData(TRUE);
+
+	const vector<wstring>* tempVec = CTerrainMgr::Get_Instance()->Get_TerrainKeys();
+	for (auto& iter : *tempVec)
+		SavedMapListBox.AddString(iter.c_str());
+
+	CTextureMgr::Get_Instance()->Get_Texture(L"TILE", L"Tile");
+
+	int tileCount = CTextureMgr::Get_Instance()->Get_MulTexCount(L"TILE", L"Tile");
+	if (tileCount != -1)
+	{
+		for (int i = 0; i < tileCount; ++i)
+		{
+			wstring tileName = L"Tile" + to_wstring(i);
+			m_TileSelecter.AddString(tileName.c_str());
+
+			CImage* pPngImg = new CImage;
+
+			wstring path = L"../Texture/Stage/TILE/tile/" + tileName + L".png";
+			pPngImg->Load(path.c_str());
+
+			m_MapPngImg.insert({ tileName.c_str(),pPngImg });
+		}
+	}
 
 	UpdateData(FALSE);
+
+	return TRUE;
 }

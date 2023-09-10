@@ -91,6 +91,5 @@ public:
 	afx_msg void OnRedChange();
 	afx_msg void OnGreenChange();
 	afx_msg void OnBlueChange();
-//	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 };

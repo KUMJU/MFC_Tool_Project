@@ -287,13 +287,14 @@ void CUnitTool::SettingStateList(CString _objKey, HTREEITEM _item)
 
 		CString filePath = CFileInfo::ConvertRelativePath(Finder.GetFilePath());
 		newSprite->iCount=SetStateImg(filePath, Finder.GetFileName() ,_objKey);
+		//filepath저장 
 	}
 
 	m_SpriteMap.insert({ _objKey , m_tempVec });
 
 }
 
-int CUnitTool::SetStateImg(CString _path, CString _stateKey, CString _objKey)
+int CUnitTool::SetStateImg(CString _path, CString _stateKey, CString _objKey )
 {
 	CFileFind Find;
 	CString OriginPath = _path;
@@ -302,8 +303,6 @@ int CUnitTool::SetStateImg(CString _path, CString _stateKey, CString _objKey)
 	bool isWorking = Find.FindFile(_path);
 	int iCount = 0;
 	CString fileName = L"";
-
-	list<CString> temp;
 
 	while (isWorking) {
 		isWorking = Find.FindNextFile();
@@ -314,9 +313,7 @@ int CUnitTool::SetStateImg(CString _path, CString _stateKey, CString _objKey)
 
 		if(L"" == fileName)
 			fileName = Find.GetFileName();
-
 		++iCount;
-		temp.push_back(CFileInfo::ConvertRelativePath(Find.GetFilePath()));
 
 	}
 
@@ -371,12 +368,7 @@ void CUnitTool::OnSelectList(NMHDR* pNMHDR, LRESULT* pResult)
 			m_iImgCount = it->iCount;
 			m_fAnimTime = it->fSpeed;
 
-			if (1 == m_iImgCount) {
-				m_strTexType = "SINGLE";
-			}
-			else {
-				m_strTexType = "MULTI";
-			}
+			m_strTexType = "MULTI";
 
 			m_currentFrame.fMax = (float)m_iImgCount;
 			m_currentFrame.fFrame = 0.f;
@@ -386,7 +378,6 @@ void CUnitTool::OnSelectList(NMHDR* pNMHDR, LRESULT* pResult)
 		}
 	}
 	m_pAnimView->SelectSprite(true);
-
 	*pResult = 0;
 
 	UpdateData(FALSE);
