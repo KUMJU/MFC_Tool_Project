@@ -134,25 +134,28 @@ bool CMyTerrain::Picking_Dot(const D3DXVECTOR3& vPos, const int& iIndex)
 
 HRESULT CMyTerrain::Initialize(int iBgCount, int iTileCntX, int iTileCntY)
 {
-    if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(TEX_MULTI, L"../Texture/Stage/Terrain/Tile/Tile%d.png", L"Terrain", L"Tile", 36)))
-    {
-        AfxMessageBox(L"Tile Texture Insert Failed");
-        return E_FAIL;
-    }
+    m_iBackImgCount = iBgCount;
+    m_iTileCntX = iTileCntX;
+    m_iTileCntY = iTileCntY;
 
-    for (int i = 0; i < TILEY; ++i)
+    m_vecTile.reserve(m_iTileCntX * m_iTileCntY);
+
+    if (m_vecTile.size() > 0)
+        return E_FAIL;
+
+    for (int i = 0; i < m_iTileCntY; ++i)
     {
-        for (int j = 0; j < TILEX; ++j)
+        for (int j = 0; j < m_iTileCntX; ++j)
         {
             TILE* pTile = new TILE;
 
-            float fX = (TILECX * j) + (i % 2) * (TILECX * 0.5f);
-            float fY = (TILECY * 0.5f) * i;
+            float	fX = (TILECX * j) + (i % 2) * (TILECX / 2.f);
+            float	fY = (TILECY / 2.f) * i;
 
-            pTile->vPos = { fX,fY,0.f };
-            pTile->vSize = { TILECX, TILECY,0.f };
+            pTile->vPos = { fX, fY, 0.f };
+            pTile->vSize = { TILECX, TILECY, 0.f };
             pTile->byOption = 0;
-            pTile->byDrawID = 3;
+            pTile->byDrawID = 0;
 
             m_vecTile.push_back(pTile);
         }
