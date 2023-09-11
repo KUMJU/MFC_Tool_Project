@@ -94,6 +94,19 @@ void CMapTool::OnListBox()
 	int iTileID = _ttoi(cStrNumber);
 	pMainView->m_iDrawMode = m_RadioMode;
 	pMainView->m_iDrawID = iTileID;
+
+	switch (iTileID)
+	{
+	case 1:
+		pMainView->m_iDrawOption = 1;
+		break;
+	case 2:
+		pMainView->m_iDrawOption = 2;
+		break;
+	default:
+		pMainView->m_iDrawOption = 0;
+		break;
+	}
 	UpdateData(FALSE);
 }
 
@@ -202,6 +215,8 @@ void CMapTool::LoadSavedMap()
 		CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
 		CToolView* pMainView = dynamic_cast<CToolView*>(pMain->m_MainSplitter.GetPane(0, 1));
 		pMainView->m_pMyTerrain = m_SelectedTerrain;
+
+		pMainView->SetScrollSizes(MM_TEXT, CSize(m_SelectedTerrain->Get_TileCntX() * TILECX, m_SelectedTerrain->Get_TileCntY() * TILECY / 2));
 
 		pMainView->Invalidate();
 	}

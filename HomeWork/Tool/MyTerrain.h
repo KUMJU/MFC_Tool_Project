@@ -19,6 +19,9 @@ public:
 
 	void	SetBackGroundImgCount(int bgImgCount) { m_iBackImgCount = bgImgCount; }
 
+	int		Get_TileCntX() { return m_iTileCntX; }
+	int		Get_TileCntY() { return m_iTileCntY; }
+
 public:
 	HRESULT		Initialize(int iBgCount, int iTileCntX, int iTileCntY);
 	void		Update();
