@@ -28,5 +28,7 @@ private:
 	LPDIRECT3DDEVICE9	m_pDevice;
 	LPD3DXSPRITE		m_pSprite;
 	LPD3DXFONT			m_pFont;
+
+
 };
 

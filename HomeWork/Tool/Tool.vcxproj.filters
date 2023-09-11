@@ -64,6 +64,18 @@
     <Filter Include="04.Etc\02.FileInfo">
       <UniqueIdentifier>{8fe636d6-91c4-4d17-bbdc-ce0cf33476f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Manager\02. TimeMgr">
+      <UniqueIdentifier>{ce07c20b-8277-44da-9b29-5a9fe55ebec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.View\02.MiniAnimView">
+      <UniqueIdentifier>{4808ba46-38c1-42be-bb90-a1aa54afd753}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Etc\01.Dialog\02.CreateMap">
+      <UniqueIdentifier>{7c8b5bbb-dce4-4308-91e1-8b914dda8ca4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Manager\03. TerrainMgr">
+      <UniqueIdentifier>{79a0527d-b597-4951-8b2f-8bc337845e6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tool.h">
@@ -123,6 +135,18 @@
     <ClInclude Include="FileInfo.h">
       <Filter>04.Etc\02.FileInfo</Filter>
     </ClInclude>
+    <ClInclude Include="TimeMgr.h">
+      <Filter>03.Manager\02. TimeMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniAnimView.h">
+      <Filter>01.View\02.MiniAnimView</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateMapTool.h">
+      <Filter>04.Etc\01.Dialog\02.CreateMap</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainMgr.h">
+      <Filter>03.Manager\03. TerrainMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tool.cpp">
@@ -172,6 +196,18 @@
     </ClCompile>
     <ClCompile Include="FileInfo.cpp">
       <Filter>04.Etc\02.FileInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeMgr.cpp">
+      <Filter>03.Manager\02. TimeMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniAnimView.cpp">
+      <Filter>01.View\02.MiniAnimView</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateMapTool.cpp">
+      <Filter>04.Etc\01.Dialog\02.CreateMap</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainMgr.cpp">
+      <Filter>03.Manager\03. TerrainMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

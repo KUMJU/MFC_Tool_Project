@@ -49,8 +49,17 @@ HRESULT CTextureMgr::Insert_Texture(TEXTYPE eType, const TCHAR* pFilePath, const
 
 		m_mapTex.insert({ pObjKey,pTexture });
 	}
+	else {
+		if (TEX_MULTI == eType) {
+			iter->second->Insert_Texture(pFilePath, pStateKey, iCnt);
+		}
+	}
 
 	return S_OK;
+}
+
+void CTextureMgr::EditTextureInfo(SPRITEINFO _info)
+{
 }
 
 void CTextureMgr::Release()

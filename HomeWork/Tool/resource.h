@@ -10,6 +10,8 @@
 #define IDD_CUnitTool                   310
 #define IDD_CMyform                     311
 #define IDD_CMapTool                    312
+#define IDD_DIALOG1                     314
+#define IDD_CCreateMapTool              314
 #define IDC_BUTTON1                     1000
 #define IDC_EDIT1                       1001
 #define IDC_BUTTON4                     1001
@@ -44,14 +46,22 @@
 #define IDC_SLIDER3                     1025
 #define IDC_SLIDER4                     1026
 #define IDC_COMBO1                      1027
+#define IDC_PICTURE1                    1028
+#define IDC_TEXT1                       1029
+#define IDC_TEXT2                       1030
+#define IDC_TEXT3                       1031
+#define IDC_TEXT4                       1032
+#define IDC_IMGSIZE                     1033
+#define IDC_IMGSIZE2                    1034
+#define IDC_TILESIZE                    1034
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        314
+#define _APS_NEXT_RESOURCE_VALUE        316
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1028
+#define _APS_NEXT_CONTROL_VALUE         1034
 #define _APS_NEXT_SYMED_VALUE           313
 #endif
 #endif

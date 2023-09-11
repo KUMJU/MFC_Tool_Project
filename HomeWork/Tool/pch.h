@@ -21,6 +21,7 @@
 #include <vector>	
 #include <list>	
 #include <algorithm>
+#include <fstream>
 
 
 using namespace std;

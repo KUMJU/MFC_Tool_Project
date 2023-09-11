@@ -14,6 +14,9 @@
 #include "ToolView.h"
 #include "MainFrm.h"
 #include "MiniView.h"
+#include "TerrainMgr.h"
+#include "TextureMgr.h"
+#include"TimeMgr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -37,7 +40,7 @@ END_MESSAGE_MAP()
 
 // CToolView 생성/소멸
 
-CToolView::CToolView() : m_pMyTerrain(nullptr), m_iDrawID(0)
+CToolView::CToolView() : m_pMyTerrain(nullptr), m_iDrawID(0), m_iDrawOption(0), m_iDrawMode(0)
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
 
@@ -130,21 +133,9 @@ void CToolView::OnInitialUpdate()
 		return;
 	}
 
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(TEX_SINGLE, L"../Texture/Cube.png", L"Cube")))
-	{
-		AfxMessageBox(L"Cube Texture Insert Failed");
-		return;
-	}
+	CTerrainMgr::Get_Instance()->Initialize(this);
 
-	m_pMyTerrain = new CMyTerrain;
-
-	if (FAILED(m_pMyTerrain->Initialize()))
-	{
-		AfxMessageBox(L"Terrain Initialize Failed");
-		return;
-	}
-
-	m_pMyTerrain->Set_MainVeiw(this);
+	CTextureMgr::Get_Instance()->ReadImgPath(L"../Data/ImgPath.txt" , &m_pAnimInfo);
 }
 
 
@@ -159,7 +150,8 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 
 	CDevice::Get_Instance()->Render_Begin();
 
-	m_pMyTerrain->Render();
+	if (m_pMyTerrain != nullptr)
+		m_pMyTerrain->Render();
 
 	CDevice::Get_Instance()->Render_End();
 }
@@ -167,12 +159,10 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 void CToolView::OnDestroy()
 {
 	CScrollView::OnDestroy();
-
-	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
-	Safe_Delete(m_pMyTerrain);
-
-	CTextureMgr::Get_Instance()->Destroy_Instance();
-	CDevice::Get_Instance()->Destroy_Instance();
+	CTimeMgr::Destroy_Instance();
+	CTerrainMgr::Destroy_Instance();
+	CTextureMgr::Destroy_Instance();
+	CDevice::Destroy_Instance();
 }
 
 
@@ -182,14 +172,24 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	CScrollView::OnLButtonDown(nFlags, point);
 
-	m_pMyTerrain->Tile_Change(D3DXVECTOR3(point.x + GetScrollPos(0),point.y + GetScrollPos(1), 0.f ), m_iDrawID);
+	switch (m_iDrawMode)
+	{
+	case 1: // 타일옵션 모드
+	{
+		if (m_pMyTerrain == nullptr)
+			return;
 
-	Invalidate(FALSE);
+		m_pMyTerrain->Tile_Change(D3DXVECTOR3(point.x + GetScrollPos(0), point.y + GetScrollPos(1), 0.f), m_iDrawID, m_iDrawOption);
 
-	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
-	CMiniView* pMiniView = dynamic_cast<CMiniView*>(pMain->m_SecondSplitter.GetPane(0, 0));
+		Invalidate(FALSE);
 
-	pMiniView->Invalidate(FALSE);
+		CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+		CMiniView* pMiniView = dynamic_cast<CMiniView*>(pMain->m_SecondSplitter.GetPane(0, 0));
+
+		pMiniView->Invalidate(FALSE);
+	}
+	break;
+	}
 }
 
 
@@ -201,13 +201,24 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (GetAsyncKeyState(VK_LBUTTON))
 	{
-		m_pMyTerrain->Tile_Change(D3DXVECTOR3(point.x + GetScrollPos(0), point.y + GetScrollPos(1), 0.f), m_iDrawID);
+		switch (m_iDrawMode)
+		{
+		case 1: // 타일옵션 모드
+		{
+			if (m_pMyTerrain == nullptr)
+				return;
 
-		Invalidate(FALSE);
+			m_pMyTerrain->Tile_Change(D3DXVECTOR3(point.x + GetScrollPos(0), point.y + GetScrollPos(1), 0.f), m_iDrawID, m_iDrawOption);
 
-		CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
-		CMiniView* pMiniView = dynamic_cast<CMiniView*>(pMain->m_SecondSplitter.GetPane(0, 0));
+			Invalidate(FALSE);
 
-		pMiniView->Invalidate(FALSE);
+			CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+			CMiniView* pMiniView = dynamic_cast<CMiniView*>(pMain->m_SecondSplitter.GetPane(0, 0));
+
+			pMiniView->Invalidate(FALSE);
+		}
+		break;
+		}
+
 	}
 }

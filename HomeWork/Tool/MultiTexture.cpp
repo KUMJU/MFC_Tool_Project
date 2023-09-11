@@ -61,6 +61,8 @@ HRESULT CMultiTexture::Insert_Texture(const TCHAR* pFilePath, const TCHAR* pStat
 			return E_FAIL;
 		}
 
+
+
 		m_mapMultiTex[pStateKey].push_back(pTexInfo);
     }
 
@@ -74,4 +76,14 @@ void CMultiTexture::Release()
 		MyPair.second.clear();
 	});
 	m_mapMultiTex.clear();
+}
+
+int CMultiTexture::Get_TexCount(const TCHAR* pStateKey)
+{
+	auto iter = m_mapMultiTex.find(pStateKey);
+
+	if (iter == m_mapMultiTex.end())
+		return -1;
+
+	return m_mapMultiTex[pStateKey].size();
 }
