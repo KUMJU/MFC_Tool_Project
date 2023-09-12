@@ -23,6 +23,8 @@ private:
     void Update_Move();
     void Update_State();
 
+    void Move_Astar();
+
 private:
     D3DXVECTOR3     m_vDstPos;
     PLAYER_STATE    m_ePrevState;

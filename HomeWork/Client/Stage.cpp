@@ -19,7 +19,7 @@ CStage::~CStage()
 HRESULT CStage::Ready_Scene()
 {
 	// 지형
-	CObjMgr::Get_Instance()->Change_CurTerrain(L"Deongeon");
+	CObjMgr::Get_Instance()->Change_CurTerrain(L"Town1");
 
 	// 플레이어
 	pPlayer = new CPlayer;

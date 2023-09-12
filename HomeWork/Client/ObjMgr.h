@@ -19,6 +19,7 @@ private:
 
 public:
 	void Change_CurTerrain(const wstring& TerrainKey);
+	CMyTerrain* Get_CurTerrain() { return m_pCurrentTerrain; }
 
 public:
 	void Add_Object(ID eID, CObj* pObject); 

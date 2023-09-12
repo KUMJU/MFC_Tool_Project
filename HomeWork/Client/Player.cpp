@@ -2,11 +2,12 @@
 #include "Player.h"
 #include "Device.h"
 #include "TextureMgr.h"
+#include "AstarMgr.h"
+#include "TimeMgr.h"
 
 CPlayer::CPlayer()
     :m_eCurState(PLAYER_STATE::NONE),m_ePrevState(PLAYER_STATE::NONE)
 {
-    m_vDstPos = { 400.f,300.f,0.f };
 }
 
 CPlayer::~CPlayer()
@@ -20,7 +21,7 @@ HRESULT CPlayer::Initialize(void)
     m_wstrObjKey = L"Player";
     m_wstrStateKey = L"STAND_LDOWN";
     m_tFrame.fMax = CTextureMgr::Get_Instance()->Get_TextureCnt(m_wstrObjKey.c_str(), m_wstrStateKey.c_str());
-    m_tInfo.vPos = { 400,300,0 };
+    m_tInfo.vPos = { 700,500,0 };
     m_tInfo.vDir = { 0,0,0 };
     m_tInfo.vLook = { 0,-1,0 };
 	return S_OK;
@@ -76,6 +77,13 @@ void CPlayer::Release(void)
 
 void CPlayer::Key_Input()
 {
+    if (GetAsyncKeyState(VK_LBUTTON))
+    {
+        D3DXVECTOR3	vMouse = Get_Mouse() - m_vScroll;
+        CAstarMgr::Get_Instance()->Start_Astar(m_tInfo.vPos, vMouse);
+    }
+
+    Move_Astar();
 }
 
 void CPlayer::Update_Move()
@@ -86,4 +94,22 @@ void CPlayer::Update_State()
 {
 
 
+}
+
+void CPlayer::Move_Astar()
+{
+    list<TILE*>& BestList = CAstarMgr::Get_Instance()->Get_BestList();
+
+    if (!BestList.empty())
+    {
+        D3DXVECTOR3 vDir = BestList.front()->vPos - m_tInfo.vPos;
+        
+        float fDist = D3DXVec3Length(&vDir);
+        D3DXVec3Normalize(&vDir, &vDir);
+
+        m_tInfo.vPos += vDir * 50.f * CTimeMgr::Get_Instance()->Get_TimeDelta();
+
+        if (3.f > fDist)
+            BestList.pop_front();
+    }
 }

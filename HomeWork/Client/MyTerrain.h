@@ -10,12 +10,11 @@ public:
 	~CMyTerrain();
 
 public:
-	int		Get_TileIndex(const D3DXVECTOR3& vPos);
-	bool	Picking(const D3DXVECTOR3& vPos, const int& iIndex);
-	bool	Picking_Dot(const D3DXVECTOR3& vPos, const int& iIndex);
-
 	int		Get_TileCntX() { return m_iTileCntX; }
 	int		Get_TileCntY() { return m_iTileCntY; }
+
+	vector<TILE*>&			Get_VecTile() { return m_vecTile; }
+	vector<list<TILE*>>&	Get_VecAdj() { return m_vecAdj; }
 
 public:
 	HRESULT			Initialize(void) override;
@@ -26,13 +25,14 @@ public:
 
 public:
 	HRESULT		Load_Data(const wstring& wstrMapDataPath);
+	HRESULT		Ready_Adj();
 
 private:
-	vector<TILE*>	m_vecTile;
-
 	int	m_iBackImgCount = 0;
 	int m_iTileCntX = 0;
 	int m_iTileCntY = 0;
 
+	vector<TILE*>		m_vecTile;
+	vector<list<TILE*>>	m_vecAdj;
 };
 

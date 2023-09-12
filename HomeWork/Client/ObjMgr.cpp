@@ -37,10 +37,11 @@ void CObjMgr::Add_Object(ID eID, CObj * pObject)
 
 HRESULT CObjMgr::Initialize()
 {
-	ReadMapData(L"../Data/MapData/Deongeon.dat", L"Deongeon");
-	ReadMapData(L"../Data/MapData/Island.dat", L"Island");
-	ReadMapData(L"../Data/MapData/Shop.dat", L"Shop");
-	ReadMapData(L"../Data/MapData/Town.dat", L"Town");
+	ReadMapData(L"../Data/MapData/Town1.dat", L"Town1");
+	//ReadMapData(L"../Data/MapData/Deongeon.dat", L"Deongeon");
+	//ReadMapData(L"../Data/MapData/Island.dat", L"Island");
+	//ReadMapData(L"../Data/MapData/Shop.dat", L"Shop");
+	//ReadMapData(L"../Data/MapData/Town.dat", L"Town");
 
 	return S_OK;
 }

@@ -58,6 +58,9 @@
     <Filter Include="05.TimeMgr">
       <UniqueIdentifier>{dba5507e-57be-4e33-9bbd-19d09223d309}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06.AstarMgr">
+      <UniqueIdentifier>{2fb1d8bd-0dc2-4bd9-ad03-0379122107f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -117,6 +120,9 @@
     <ClInclude Include="TimeMgr.h">
       <Filter>05.TimeMgr</Filter>
     </ClInclude>
+    <ClInclude Include="AstarMgr.h">
+      <Filter>06.AstarMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -166,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="TimeMgr.cpp">
       <Filter>05.TimeMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="AstarMgr.cpp">
+      <Filter>06.AstarMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -156,6 +156,8 @@ HRESULT CMyTerrain::Initialize(int iBgCount, int iTileCntX, int iTileCntY)
             pTile->vSize = { TILECX, TILECY, 0.f };
             pTile->byOption = 0;
             pTile->byDrawID = 0;
+            pTile->iIndex = i * m_iTileCntX + j;
+            pTile->iParentIndex = 0;
 
             m_vecTile.push_back(pTile);
         }
