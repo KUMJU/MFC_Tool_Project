@@ -22,6 +22,13 @@ const TEXINFO* CTextureMgr::Get_Texture(const TCHAR* pObjKey, const TCHAR* pStat
 	return iter->second->Get_Texture(pStateKey, iCnt);
 }
 
+int CTextureMgr::Get_TextureCnt(const TCHAR* pObjKey, const TCHAR* pStateKey)
+{
+	wstring ObjKey(pObjKey);
+
+	return m_mapTex[ObjKey]->Get_TextureCnt(pStateKey);
+}
+
 HRESULT CTextureMgr::Insert_Texture(TEXTYPE eType, const TCHAR* pFilePath, const TCHAR* pObjKey, const TCHAR* pStateKey, const int& iCnt)
 {
 	auto iter = m_mapTex.find(pObjKey);
@@ -58,8 +65,41 @@ HRESULT CTextureMgr::Insert_Texture(TEXTYPE eType, const TCHAR* pFilePath, const
 	return S_OK;
 }
 
-void CTextureMgr::EditTextureInfo(SPRITEINFO _info)
+HRESULT CTextureMgr::ReadImgPath(const wstring& wstrPath)
 {
+	wifstream fin;
+	fin.open(wstrPath, ios::in);
+
+	if (!fin.fail())
+	{
+		TCHAR	szObjKey[MAX_STR] = L"";
+		TCHAR   szStateKey[MAX_STR] = L"";
+		TCHAR	szCount[MAX_STR] = L"";
+		TCHAR	szPath[MAX_PATH] = L"";
+
+		while (true)
+		{
+			fin.getline(szObjKey, MAX_STR, '|');
+			fin.getline(szStateKey, MAX_STR, '|');
+			fin.getline(szCount, MAX_STR, '|');
+			fin.getline(szPath, MAX_PATH);
+
+			if (fin.eof())
+				break;
+
+			int iCount = _ttoi(szCount);
+
+			if (FAILED(Insert_Texture(TEX_MULTI, szPath, szObjKey, szStateKey, iCount)))
+			{
+				ERR_MSG(L"MultiImgTxt Insert Failed");
+				return E_FAIL;
+			}
+		}
+
+		fin.close();
+	}
+
+	return S_OK;
 }
 
 void CTextureMgr::Release()

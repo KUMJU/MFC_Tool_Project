@@ -2,6 +2,7 @@
 
 #include "Include.h"
 
+
 class CObj
 {
 public:

@@ -29,8 +29,15 @@ typedef struct tagTexture
 struct SPRITEINFO {
 	int		iCount;
 	float	fSpeed;
+
+#ifdef _AFX
 	CString strObjKey;
 	CString strStateKey;
+#else
+	wstring strObjKey;
+	wstring strStateKey;
+#endif
+
 	int iR;
 	int iG;
 	int iB;

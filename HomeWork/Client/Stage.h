@@ -19,6 +19,5 @@ public:
 
 private:
 	CPlayer*	pPlayer;
-	CMyTerrain* m_pTerrain;
 };
 

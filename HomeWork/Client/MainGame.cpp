@@ -4,6 +4,7 @@
 #include "ObjMgr.h"
 #include "TextureMgr.h"
 #include "SceneMgr.h"
+#include "TimeMgr.h"
 
 CMainGame::CMainGame()
 {
@@ -16,13 +17,16 @@ CMainGame::~CMainGame()
 
 void CMainGame::Initialize()
 {
+	CTimeMgr::Get_Instance()->Initialize();
 	CDevice::Get_Instance()->Init_Device();	
+	CTextureMgr::Get_Instance()->ReadImgPath(L"../Data/ImgPath.txt");
+	CObjMgr::Get_Instance()->Initialize();
 	CSceneMgr::Get_Instance()->Change_SceneMgr(CSceneMgr::STAGE);
-
 }
 
 void CMainGame::Update()
 {
+	CTimeMgr::Get_Instance()->Update();
 	CObjMgr::Get_Instance()->Update();
 	CSceneMgr::Get_Instance()->Update_SceneMgr();
 }
@@ -35,7 +39,6 @@ void CMainGame::Late_Update()
 
 void CMainGame::Render()
 {
-	CObjMgr::Get_Instance()->Render();
 	CSceneMgr::Get_Instance()->Render_SceneMgr();
 }
 
@@ -45,4 +48,5 @@ void CMainGame::Release()
 	CSceneMgr::Destroy_Instance();
 	CTextureMgr::Destroy_Instance();
 	CDevice::Destroy_Instance();
+	CTimeMgr::Destroy_Instance();
 }

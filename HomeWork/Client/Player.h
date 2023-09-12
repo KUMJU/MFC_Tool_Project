@@ -24,7 +24,6 @@ private:
     void Update_State();
 
 private:
-    CMultiTexture   m_MulTex;
     D3DXVECTOR3     m_vDstPos;
     PLAYER_STATE    m_ePrevState;
     PLAYER_STATE    m_eCurState;

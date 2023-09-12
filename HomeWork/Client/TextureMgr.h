@@ -12,10 +12,11 @@ private:
 
 public:
 	const TEXINFO* Get_Texture(const TCHAR* pObjKey, const TCHAR* pStateKey = L"", const int& iCnt = 0);
+	int	Get_TextureCnt(const TCHAR* pObjKey, const TCHAR* pStateKey);
 
 public:
 	HRESULT		Insert_Texture(TEXTYPE eType, const TCHAR* pFilePath, const TCHAR* pObjKey, const TCHAR* pStateKey = L"", const int& iCnt = 0);
-	void		EditTextureInfo(SPRITEINFO _info);
+	HRESULT		ReadImgPath(const wstring& wstrPath);
 	void		Release();
 
 private:

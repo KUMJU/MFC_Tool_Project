@@ -7,7 +7,7 @@
 #include "Device.h"
 
 CStage::CStage()
-	:pPlayer(nullptr), m_pTerrain(nullptr)
+	:pPlayer(nullptr)
 {
 }
 
@@ -19,10 +19,7 @@ CStage::~CStage()
 HRESULT CStage::Ready_Scene()
 {
 	// 지형
-	m_pTerrain = new CMyTerrain;
-	if (nullptr == m_pTerrain) return E_FAIL;
-
-	m_pTerrain->Initialize();
+	CObjMgr::Get_Instance()->Change_CurTerrain(L"Deongeon");
 
 	// 플레이어
 	pPlayer = new CPlayer;
@@ -39,7 +36,7 @@ HRESULT CStage::Ready_Scene()
 void CStage::Update_Scene()
 {
 	CObjMgr::Get_Instance()->Update();
-	m_pTerrain->Update();
+	pPlayer->Update();
 }
 
 void CStage::Late_Update_Scene()
@@ -51,7 +48,6 @@ void CStage::Render_Scene()
 {
 	CDevice::Get_Instance()->Render_Begin();
 
-	m_pTerrain->Render();
 	CObjMgr::Get_Instance()->Render();
 
 	CDevice::Get_Instance()->Render_End();
@@ -59,5 +55,4 @@ void CStage::Render_Scene()
 
 void CStage::Release_Scene()
 {
-	m_pTerrain->Release();
 }

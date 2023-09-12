@@ -31,7 +31,7 @@ HRESULT CMultiTexture::Insert_Texture(const TCHAR* pFilePath, const TCHAR* pStat
 
         TEXINFO* pTexInfo = new TEXINFO;
         ZeroMemory(pTexInfo, sizeof(TEXINFO));
-
+		
 		if (FAILED(D3DXGetImageInfoFromFile(szFullPath, &(pTexInfo->tImgInfo))))
 		{
 			Safe_Release(pTexInfo->pTexture);
@@ -74,4 +74,16 @@ void CMultiTexture::Release()
 		MyPair.second.clear();
 	});
 	m_mapMultiTex.clear();
+}
+
+int CMultiTexture::Get_TextureCnt(const TCHAR* pStateKey)
+{
+	wstring StateKey(pStateKey);
+
+	auto iter = m_mapMultiTex.find(StateKey);
+
+	if (iter == m_mapMultiTex.end())
+		return 0;
+
+	return iter->second.size()-1;
 }

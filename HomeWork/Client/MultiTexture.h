@@ -13,6 +13,7 @@ public:
 
 public:
 	map<wstring, vector<TEXINFO*>>& Get_TexMap() { return m_mapMultiTex; }
+	int Get_TextureCnt(const TCHAR* pStateKey);
 
 private:
 	map<wstring, vector<TEXINFO*>>		m_mapMultiTex;

@@ -55,6 +55,9 @@
     <Filter Include="04.TextureMgr\Texture\Multi">
       <UniqueIdentifier>{c17dcbc3-709b-4b3a-9d34-367fa8abf3e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.TimeMgr">
+      <UniqueIdentifier>{dba5507e-57be-4e33-9bbd-19d09223d309}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -111,6 +114,9 @@
     <ClInclude Include="MultiTexture.h">
       <Filter>04.TextureMgr\Texture\Multi</Filter>
     </ClInclude>
+    <ClInclude Include="TimeMgr.h">
+      <Filter>05.TimeMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -157,6 +163,9 @@
     </ClCompile>
     <ClCompile Include="MultiTexture.cpp">
       <Filter>04.TextureMgr\Texture\Multi</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeMgr.cpp">
+      <Filter>05.TimeMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
