@@ -20,8 +20,8 @@ Boss|WALK_LDOWN|8|..\Texture\Stage\Boss\WALK_LDOWN\Walk_LDown%d.png
 Boss|WALK_LUP|8|..\Texture\Stage\Boss\WALK_LUP\Walk_LUp%d.png
 Map|map|8|..\Texture\Stage\Map\map\Map%d.png
 Benya|STAND_DOWN|10|..\Texture\Stage\NPC\Benya\STAND_DOWN\B%d.png
-SMITHKEEPER|Kenishi|7|..\Texture\Stage\NPC\SMITHKEEPER\Kenishi\Kenishi%d.png
-STOREKEEPER|Linda|12|..\Texture\Stage\NPC\STOREKEEPER\Linda\Linda%d.png
+SMITHKEEPER|STAND_DOWN|7|..\Texture\Stage\NPC\SMITHKEEPER\STAND_DOWN\Kenishi%d.png
+STOREKEEPER|STAND_DOWN|12|..\Texture\Stage\NPC\STOREKEEPER\STAND_DOWN\Linda%d.png
 WingPig|LD|6|..\Texture\Stage\NPC\WingPig\LD\LD%d.png
 WingPig|LU|6|..\Texture\Stage\NPC\WingPig\LU\LU%d.png
 Object|Etc|38|..\Texture\Stage\Object\Etc\Etc%d.png

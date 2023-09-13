@@ -20,8 +20,10 @@
 #define IDC_EDIT3                       1003
 #define IDC_BUTTON9                     1003
 #define IDC_EDIT4                       1004
+#define IDC_BUTTON10                    1004
 #define IDC_LIST2                       1005
 #define IDC_EDIT5                       1005
+#define IDC_BUTTON11                    1006
 #define IDC_BUTTON2                     1007
 #define IDC_EDIT8                       1007
 #define IDC_RADIO1                      1008
@@ -40,6 +42,7 @@
 #define IDC_BUTTON7                     1019
 #define IDC_LIST5                       1019
 #define IDC_EDIT6                       1020
+#define IDC_LIST6                       1020
 #define IDC_TREE1                       1021
 #define IDC_SLIDER1                     1023
 #define IDC_SLIDER2                     1024

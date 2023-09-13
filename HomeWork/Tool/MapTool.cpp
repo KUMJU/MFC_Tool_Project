@@ -35,6 +35,8 @@ void CMapTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST3, SavedMapListBox);
 	DDX_Control(pDX, IDC_PICTURE, m_Picture);
 	DDX_Radio(pDX, IDC_RADIO1, m_RadioMode);
+	DDX_Control(pDX, IDC_LIST6, m_ObjList);
+	DDX_Control(pDX, IDC_LIST2, m_ObjRenderList);
 }
 
 
@@ -45,6 +47,9 @@ BEGIN_MESSAGE_MAP(CMapTool, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON9, &CMapTool::SaveMapData)
 	ON_LBN_SELCHANGE(IDC_LIST3, &CMapTool::OnSelectTerrain)
 	ON_BN_CLICKED(IDC_BUTTON8, &CMapTool::LoadSavedMap)
+	ON_LBN_SELCHANGE(IDC_LIST6, &CMapTool::OnObjSelect)
+	ON_BN_CLICKED(IDC_BUTTON10, &CMapTool::OnDeleteObj)
+	ON_BN_CLICKED(IDC_BUTTON11, &CMapTool::OnDeleteObjAll)
 END_MESSAGE_MAP()
 
 
@@ -149,6 +154,108 @@ void CMapTool::Horizontal_Scroll()
 	//	m_ListBox.SetHorizontalExtent(iWidth);
 }
 
+void CMapTool::SetObjList(CString _path ,CString _prePathName)
+{
+	CFileFind Find;
+	_path += "\\*.*";
+	BOOL IsWorking = Find.FindFile(_path);
+	CString DirPath;
+
+	while (IsWorking) {
+
+		IsWorking = Find.FindNextFile();
+
+		if (Find.IsDots())
+			continue;
+
+		if (Find.IsDirectory()) {
+
+			CString fileName;
+
+			DirPath = Find.GetFilePath();
+			fileName = Find.GetFileName();
+			
+			if (fileName == L"Player" || fileName == L"Map" || fileName == L"TILE")
+				continue;
+
+			CFileFind Find2;
+			BOOL IsWorking2 = Find2.FindFile(DirPath + "\\*.*");
+			BOOL IsDirFin = true;
+
+			while (IsWorking2)
+			{
+				IsWorking2 = Find2.FindNextFile();
+
+				if (Find2.IsDots())
+					continue;
+
+				if (Find2.IsDirectory()) {
+					IsDirFin = false;
+					IsWorking2 = false;
+				}
+
+			}
+
+
+			if (!IsDirFin) {
+				SetObjList(DirPath, fileName);
+			}
+			else {
+				if (L"Object" == _prePathName) {
+					CFileFind Find3;
+					BOOL IsWorking2 = Find3.FindFile(DirPath + "\\*.*");
+					BOOL IsDirFin = true;
+
+					while (IsWorking2)
+					{
+						IsWorking2 = Find3.FindNextFile();
+
+						if (Find3.IsDots())
+							continue;
+
+						CString objFileName = Find3.GetFileName();
+						objFileName.Replace(L".png", L"");
+						m_ObjList.AddString(objFileName);
+
+					}
+
+
+				}
+				else {
+					if (-1 == m_ObjList.FindString(0, _prePathName)) {
+						m_ObjList.AddString(_prePathName);
+					}
+				}
+		
+			}
+			continue;
+		}
+	}
+
+
+
+}
+
+void CMapTool::InsertNewObj(CString _objKey, D3DXVECTOR3 _pos)
+{
+	LVITEM newItem;
+
+	CString strPositionX;
+	CString strPositionY;
+
+	strPositionX.Format(_T("%d"), (int)_pos.x);
+	strPositionY.Format(_T("%d"), (int)_pos.y);
+
+
+	int iListSize = m_ObjRenderList.GetItemCount();
+
+	m_ObjRenderList.InsertItem(iListSize, _objKey);
+	m_ObjRenderList.SetItemText(iListSize, 1, strPositionX + "," + strPositionY);
+}
+
+
+
+
 
 void CMapTool::OnCreateNewMap()
 {
@@ -172,6 +279,8 @@ void CMapTool::SaveMapData()
 
 	TCHAR szPath[MAX_PATH] = L"";
 
+	CString fileName;
+
 	GetCurrentDirectory(MAX_PATH, szPath);
 	PathRemoveFileSpec(szPath);
 	lstrcat(szPath, L"\\Data\\MapData");
@@ -180,9 +289,17 @@ void CMapTool::SaveMapData()
 	if (IDOK == Dlg.DoModal())
 	{
 		CString str = Dlg.GetPathName().GetString();
+		fileName = str;
+	
 		const TCHAR* pGetPath = str.GetString();
 
 		m_SelectedTerrain->Save_Data(pGetPath);
+
+		//오브젝트 list Save
+		CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+		CToolView* pMainView = dynamic_cast<CToolView*>(pMain->m_MainSplitter.GetPane(0, 1));
+
+		pMainView->SaveObjList(fileName);
 	}
 }
 
@@ -226,7 +343,7 @@ void CMapTool::LoadSavedMap()
 
 
 BOOL CMapTool::OnInitDialog()
-{
+{	
 	CDialog::OnInitDialog();
 
 	UpdateData(TRUE);
@@ -254,7 +371,85 @@ BOOL CMapTool::OnInitDialog()
 		}
 	}
 
+	//리스트 세팅 
+	CString tpath = _T("../Texture");
+	SetObjList(tpath, L"");
+
+	//렌더리스트
+	CRect rc;
+	m_ObjRenderList.GetClientRect(&rc);
+
+	m_ObjRenderList.InsertColumn(0, L"Name", LVCFMT_LEFT, 150);
+	m_ObjRenderList.InsertColumn(1, L"Position", LVCFMT_LEFT, rc.Width() - 150);
+
 	UpdateData(FALSE);
 
 	return TRUE;
+}
+
+
+void CMapTool::OnObjSelect()
+{
+	UpdateData(TRUE);
+
+
+	if (m_RadioMode != 0)
+		return;
+
+	int iCurSelNum = m_ObjList.GetCurSel();
+	CString CurKeyName;
+
+	m_ObjList.GetText(iCurSelNum, CurKeyName);
+
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+	CToolView* pMainView = dynamic_cast<CToolView*>(pMain->m_MainSplitter.GetPane(0, 1));
+
+	if (nullptr == pMainView)
+		return;
+
+	pMainView->m_iDrawMode = m_RadioMode;
+	pMainView->SetCurrentObjTarget(CurKeyName);
+
+	UpdateData(FALSE);
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+//ObjList 삭제 버튼
+void CMapTool::OnDeleteObj()
+{
+	int iCount = m_ObjRenderList.GetSelectionMark();
+
+	if (-1 == iCount)
+		return;
+
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+	CToolView* pMainView = dynamic_cast<CToolView*>(pMain->m_MainSplitter.GetPane(0, 1));
+
+	if (nullptr == pMainView)
+		return;
+
+	pMainView->DeleteObj(iCount);
+
+	m_ObjRenderList.DeleteItem(iCount);
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CMapTool::OnDeleteObjAll()
+{
+
+	m_ObjRenderList.DeleteAllItems();
+
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+	CToolView* pMainView = dynamic_cast<CToolView*>(pMain->m_MainSplitter.GetPane(0, 1));
+
+	if (nullptr == pMainView)
+		return;
+
+
+	pMainView->DeleteObjAll();
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }

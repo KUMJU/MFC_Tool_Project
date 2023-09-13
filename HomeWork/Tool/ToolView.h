@@ -50,13 +50,26 @@ public:
 	afx_msg void OnDestroy();
 
 public:
+	
+
+public:
 	CMyTerrain* m_pMyTerrain;
 	int			m_iDrawID;
 	int			m_iDrawOption;
 	int			m_iDrawMode;
 
 	map<CString, vector<SPRITEINFO*>> m_pAnimInfo;
+	vector<OBJINFO> m_ObjList;
 
+	D3DXVECTOR3 m_MousePos;
+	OBJINFO currentObjKey;
+
+	void DeleteObj(int _count);
+	void DeleteObjAll();
+	void SetCurrentObjTarget(CString _objKey);
+	void SaveObjList(CString DataSavePath);
+
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
 
 #ifndef _DEBUG  // ToolView.cpp의 디버그 버전

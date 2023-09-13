@@ -21,6 +21,8 @@ public:
 	void Change_CurTerrain(const wstring& TerrainKey);
 	CMyTerrain* Get_CurTerrain() { return m_pCurrentTerrain; }
 
+	void SetObject(const wstring& _sceneKey);
+
 public:
 	void Add_Object(ID eID, CObj* pObject); 
 
@@ -33,11 +35,13 @@ public:
 
 private:
 	void	ReadMapData(const wstring& DataPath, const wstring& TerrainKey);
+	void	ReadObjectData(const wstring& DataPath, const wstring& KeyName);
 
 private:
 	list<CObj*>		m_listObject[END];
 	CMyTerrain*		m_pCurrentTerrain;
 
 	map<wstring,CMyTerrain*>	m_mapTerrainPool;
+	map<wstring,list<OBJINFO>>	m_ObjList;
 };
 

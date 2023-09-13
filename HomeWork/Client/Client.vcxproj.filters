@@ -58,8 +58,13 @@
     <Filter Include="05.TimeMgr">
       <UniqueIdentifier>{dba5507e-57be-4e33-9bbd-19d09223d309}</UniqueIdentifier>
     </Filter>
+<<<<<<< Updated upstream
     <Filter Include="06.AstarMgr">
       <UniqueIdentifier>{2fb1d8bd-0dc2-4bd9-ad03-0379122107f5}</UniqueIdentifier>
+=======
+    <Filter Include="01.ObjMgr\03. Monster">
+      <UniqueIdentifier>{1ae72a44-4d4f-418f-a041-26c9a69bfb11}</UniqueIdentifier>
+>>>>>>> Stashed changes
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -120,11 +125,16 @@
     <ClInclude Include="TimeMgr.h">
       <Filter>05.TimeMgr</Filter>
     </ClInclude>
+<<<<<<< Updated upstream
     <ClInclude Include="AstarMgr.h">
       <Filter>06.AstarMgr</Filter>
     </ClInclude>
     <ClInclude Include="Logo.h">
       <Filter>02.SceneMgr\Scene\00.Logo</Filter>
+=======
+    <ClInclude Include="Monster.h">
+      <Filter>01.ObjMgr\03. Monster</Filter>
+>>>>>>> Stashed changes
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -176,11 +186,16 @@
     <ClCompile Include="TimeMgr.cpp">
       <Filter>05.TimeMgr</Filter>
     </ClCompile>
+<<<<<<< Updated upstream
     <ClCompile Include="AstarMgr.cpp">
       <Filter>06.AstarMgr</Filter>
     </ClCompile>
     <ClCompile Include="Logo.cpp">
       <Filter>02.SceneMgr\Scene\00.Logo</Filter>
+=======
+    <ClCompile Include="Monster.cpp">
+      <Filter>01.ObjMgr\03. Monster</Filter>
+>>>>>>> Stashed changes
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

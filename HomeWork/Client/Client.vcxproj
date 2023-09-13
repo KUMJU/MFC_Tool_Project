@@ -141,6 +141,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="Logo.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="MultiTexture.h" />
     <ClInclude Include="MyTerrain.h" />
     <ClInclude Include="Obj.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="Logo.cpp" />
     <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MultiTexture.cpp" />
     <ClCompile Include="MyTerrain.cpp" />
     <ClCompile Include="Obj.cpp" />

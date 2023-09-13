@@ -34,10 +34,12 @@ public:
 	virtual void OnInitialUpdate();
 	afx_msg void OnMapTool();
 
-private:
-	CFont		m_Font;
 	CUnitTool	m_UnitTool;
 	CMapTool	m_MapTool;
+
+private:
+	CFont		m_Font;
+
 	
 };
 

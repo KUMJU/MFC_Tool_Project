@@ -4,6 +4,8 @@
 #include "Device.h"
 #include "MyTerrain.h"
 
+#include"Monster.h"
+
 IMPLEMENT_SINGLETON(CObjMgr)
 
 CObjMgr::CObjMgr()
@@ -27,6 +29,30 @@ void CObjMgr::Change_CurTerrain(const wstring& TerrainKey)
 	m_pCurrentTerrain = iter->second;
 }
 
+void CObjMgr::SetObject(const wstring& _sceneKey)
+{
+	auto iter = m_ObjList.find(_sceneKey);
+	CObj* newObj;
+
+	if (m_ObjList.end() != iter) {
+		for (auto& it : iter->second) {
+			if (it.strObjKey == L"Boss") {
+				newObj = new CMonster;
+				newObj->SetKeyName(it.strObjKey, it.strStateKey);
+
+			}
+			else if (it.strObjKey == L"BlueWolf") {
+
+			}
+
+
+
+		}
+	}
+
+
+}
+
 void CObjMgr::Add_Object(ID eID, CObj * pObject)
 {
 	if (nullptr == pObject || END <= eID)
@@ -43,6 +69,7 @@ HRESULT CObjMgr::Initialize()
 	//ReadMapData(L"../Data/MapData/Shop.dat", L"Shop");
 	//ReadMapData(L"../Data/MapData/Town.dat", L"Town");
 
+	ReadObjectData(L"../Data/MapData/Deongeon.dat", L"Deongeon");
 	return S_OK;
 }
 
@@ -123,4 +150,54 @@ void CObjMgr::ReadMapData(const wstring& DataPath, const wstring& TerrainKey)
 	}
 
 	m_mapTerrainPool.insert({ TerrainKey, pTerrain });
+
 }
+
+void CObjMgr::ReadObjectData(const wstring& DataPath , const wstring& KeyName)
+{
+	HANDLE hFile = CreateFile(DataPath.c_str(), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return;
+
+	DWORD dwByte(0), dwStrByte(0);
+	
+	OBJINFO objInfo;
+
+	while (true)
+	{
+		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		TCHAR* pName = new TCHAR[dwStrByte];
+		ReadFile(hFile, pName, dwStrByte, &dwByte, nullptr);
+		objInfo.strObjKey = pName;
+
+		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		TCHAR* pName2 = new TCHAR[dwStrByte];
+		ReadFile(hFile, pName2, dwStrByte, &dwByte, nullptr);
+		objInfo.strObjKey = pName2;
+
+		ReadFile(hFile, &objInfo.IsReverse, sizeof(bool), &dwByte, nullptr);
+		ReadFile(hFile, &objInfo.iCount, sizeof(int), &dwByte, nullptr);
+		ReadFile(hFile, &objInfo.vPos, sizeof(D3DXVECTOR3), &dwByte, nullptr);
+
+		if (0 == dwByte)
+		{
+			delete[] pName;
+			delete[] pName2;
+			break;
+		}
+		
+		list<OBJINFO> tempList;
+		tempList.push_back(objInfo);
+
+		m_ObjList.insert({ KeyName , tempList });
+	}
+
+
+	CloseHandle(hFile);
+
+
+}
+
+
+

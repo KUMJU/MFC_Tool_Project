@@ -29,6 +29,21 @@ typedef struct tagTexture
 struct SPRITEINFO {
 	int		iCount;
 	float	fSpeed;
+#ifdef _AFX
+	CString strObjKey;
+	CString strStateKey;
+#else
+	wstring strObjKey;
+	wstring strStateKey;
+#endif
+	int iR;
+	int iG;
+	int iB;
+	int iA;
+};
+
+//맵에 배치한 오브젝트 정보를 저장해주는 구조체
+struct OBJINFO {
 
 #ifdef _AFX
 	CString strObjKey;
@@ -38,10 +53,9 @@ struct SPRITEINFO {
 	wstring strStateKey;
 #endif
 
-	int iR;
-	int iG;
-	int iB;
-	int iA;
+	bool IsReverse;
+	D3DXVECTOR3 vPos;
+	int iCount;
 };
 
 typedef struct tagTile
@@ -49,7 +63,7 @@ typedef struct tagTile
 	D3DXVECTOR3	vPos;			// 타일의 중점 좌표
 	D3DXVECTOR3 vSize;			// 타일의 가로, 세로 사이즈
 
-	BYTE		byOption;		// 0, 1번(장애물), 2번(포탈)
+	BYTE		byOption;		// 0, 1번(장애물)
 	BYTE		byDrawID;		// 몇 번 타일 이미지
 
 	int			iIndex = 0;

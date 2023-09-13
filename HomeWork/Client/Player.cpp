@@ -24,6 +24,8 @@ HRESULT CPlayer::Initialize(void)
     m_tInfo.vPos = { 700,500,0 };
     m_tInfo.vDir = { 0,0,0 };
     m_tInfo.vLook = { 0,-1,0 };
+
+    m_spriteInfo = CTextureMgr::Get_Instance()-> GetSpriteInfo(m_wstrObjKey, m_wstrStateKey);
 	return S_OK;
 }
 
@@ -67,7 +69,7 @@ void CPlayer::Render(void)
         nullptr,
         &vCenter,
         nullptr,
-        D3DCOLOR_ARGB(255, 255, 255, 255));
+        D3DCOLOR_ARGB(m_spriteInfo.iA, m_spriteInfo.iR, m_spriteInfo.iG, m_spriteInfo.iB));
 
 }
 

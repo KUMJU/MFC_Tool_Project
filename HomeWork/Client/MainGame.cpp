@@ -20,6 +20,7 @@ void CMainGame::Initialize()
 	CTimeMgr::Get_Instance()->Initialize();
 	CDevice::Get_Instance()->Init_Device();	
 	CTextureMgr::Get_Instance()->ReadImgPath(L"../Data/ImgPath.txt");
+	CTextureMgr::Get_Instance()->Initialize();
 	CObjMgr::Get_Instance()->Initialize();
 	CSceneMgr::Get_Instance()->Change_SceneMgr(CSceneMgr::STAGE);
 }

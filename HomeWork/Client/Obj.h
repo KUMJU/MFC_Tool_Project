@@ -29,6 +29,12 @@ public:
 	virtual void		Render(void)PURE;
 	virtual void		Release(void)PURE;
 
+public:
+	void		SetKeyName(wstring _objKey, wstring _stateKey) {
+		m_wstrObjKey = _objKey;
+		m_wstrStateKey = _stateKey;
+	}
+
 protected:
 	void		Move_Frame(void);
 
@@ -42,5 +48,7 @@ protected:
 	wstring					m_wstrStateKey = L"";
 
 	DWORD					m_dwTime = NULL;
+
+	SPRITEINFO				m_spriteInfo;
 };
 

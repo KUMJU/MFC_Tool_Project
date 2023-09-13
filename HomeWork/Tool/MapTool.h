@@ -29,9 +29,12 @@ public:
 	afx_msg void SaveMapData();
 	afx_msg void OnSelectTerrain();
 	afx_msg void LoadSavedMap();
+	afx_msg void OnObjSelect();
+
 	virtual BOOL OnInitDialog();
 
 	void Horizontal_Scroll();
+	void SetObjList(CString _path, CString _prePathName);
 
 public:
 	CCreateMapTool m_CreateMapTool;
@@ -41,10 +44,18 @@ public:
 	map<CString, CImage*>	m_MapPngImg;
 	CString	m_strSelectImg;
 	CStatic m_Picture;
+
 	CListBox SavedMapListBox;
+	CListBox m_ObjList;
+	CListCtrl m_ObjRenderList;
+
 	int m_RadioMode;
 
 	CMyTerrain* m_SelectedTerrain;
-
 	CString m_strSelectedMapName = L"";
+
+public:
+	void InsertNewObj(CString _objKey , D3DXVECTOR3 _pos);
+	afx_msg void OnDeleteObj();
+	afx_msg void OnDeleteObjAll();
 };

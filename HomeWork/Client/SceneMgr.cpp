@@ -27,7 +27,7 @@ HRESULT CSceneMgr::Change_SceneMgr(ID eID)
 
 		switch (m_eNextScene)
 		{
-		case CSceneMgr::LOADING:
+		case CSceneMgr::LOGO:
 			break;
 
 		case CSceneMgr::STAGE:

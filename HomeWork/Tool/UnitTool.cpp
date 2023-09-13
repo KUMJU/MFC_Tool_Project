@@ -72,7 +72,6 @@ BEGIN_MESSAGE_MAP(CUnitTool, CDialog)
 	ON_EN_CHANGE(IDC_EDIT2, &CUnitTool::OnRedChange)
 	ON_EN_CHANGE(IDC_EDIT3, &CUnitTool::OnGreenChange)
 	ON_EN_CHANGE(IDC_EDIT4, &CUnitTool::OnBlueChange)
-//	ON_WM_VSCROLL()
 	ON_WM_HSCROLL()
 END_MESSAGE_MAP()
 
@@ -173,6 +172,10 @@ void CUnitTool::SetTreeItems(CString _path, int iCount, HTREEITEM _item)
 
 			DirPath = Find.GetFilePath();
 			fileName = Find.GetFileName();
+
+
+			if (fileName == "Object" || fileName == "Map" || fileName == "TILE")
+				continue;
 
 			CFileFind Find2;
 			BOOL IsWorking2 = Find2.FindFile(DirPath + "\\*.*");
@@ -325,51 +328,42 @@ int CUnitTool::SetStateImg(CString _path, CString _stateKey, CString _objKey )
 //스프라이트 저장하기 버튼
 void CUnitTool::OnBnClickedButton1()
 {
+	TCHAR szPath[MAX_PATH] = L"..\\Data\\UnitData\\UnitData.dat";
 
-	CFileDialog Dlg(FALSE, L"dat", L"*.dat",
-		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-		L"Data File(*.dat) | *.dat ||", this);
+	HANDLE hFile = CreateFile(szPath, GENERIC_WRITE, 0, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
-	TCHAR szPath[MAX_PATH] = L"";
+	if (INVALID_HANDLE_VALUE == hFile)
+		return;
 
-	GetCurrentDirectory(MAX_PATH, szPath);
-	PathRemoveFileSpec(szPath);
-	lstrcat(szPath, L"\\Data\\UnitData");
-	Dlg.m_ofn.lpstrInitialDir = szPath;
-
-	if (IDOK == Dlg.DoModal())
-	{
-		CString str = Dlg.GetPathName().GetString();
-		const TCHAR* pGetPath = str.GetString();
-
-		HANDLE hFile = CreateFile(pGetPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-
-		if (INVALID_HANDLE_VALUE == hFile)
-			return;
-
-		DWORD dwByte(0);
+	DWORD dwByte(0), dwStrByte(0);
 
 		
 
-		for (auto& iter : m_SpriteMap) {
-			for (auto& it : iter.second) {
+	for (auto& iter : m_SpriteMap) {
+		for (auto& it : iter.second) {
 
-				WriteFile(hFile, &(it->strObjKey), sizeof(it->strObjKey.GetLength()) * sizeof(TCHAR), &dwByte, nullptr);
-				WriteFile(hFile, &(it->strStateKey), sizeof(it->strStateKey.GetLength()) * sizeof(TCHAR), &dwByte, nullptr);
-				WriteFile(hFile, &(it->fSpeed), sizeof(float), &dwByte, nullptr);
-				WriteFile(hFile, &(it->iA), sizeof(float), &dwByte, nullptr);
-				WriteFile(hFile, &(it->iR), sizeof(int), &dwByte, nullptr);
-				WriteFile(hFile, &(it->iG), sizeof(int), &dwByte, nullptr);
-				WriteFile(hFile, &(it->iB), sizeof(int), &dwByte, nullptr);
-				WriteFile(hFile, &(it->iCount), sizeof(int), &dwByte, nullptr);
+			wstring temp1 = it->strObjKey.GetString();
+			dwStrByte = sizeof(temp1) * sizeof(TCHAR);
+			WriteFile(hFile, &(dwStrByte), sizeof(DWORD), &dwByte, nullptr);
+			WriteFile(hFile, it->strObjKey.GetString(), dwStrByte, &dwByte, nullptr);
 
-			}
+			wstring temp2 = it->strStateKey.GetString();
+			dwStrByte = sizeof(temp2) * sizeof(TCHAR);
+			WriteFile(hFile, &(dwStrByte), sizeof(DWORD), &dwByte, nullptr);
+			WriteFile(hFile, it->strStateKey.GetString(), dwStrByte, &dwByte, nullptr);
+
+			WriteFile(hFile, &(it->fSpeed), sizeof(float), &dwByte, nullptr);
+			WriteFile(hFile, &(it->iA), sizeof(int), &dwByte, nullptr);
+			WriteFile(hFile, &(it->iR), sizeof(int), &dwByte, nullptr);
+			WriteFile(hFile, &(it->iG), sizeof(int), &dwByte, nullptr);
+			WriteFile(hFile, &(it->iB), sizeof(int), &dwByte, nullptr);
+			WriteFile(hFile, &(it->iCount), sizeof(int), &dwByte, nullptr);
+
 		}
-
-		CloseHandle(hFile);
-
 	}
 
+	CloseHandle(hFile);
+	AfxMessageBox(L"Save Success!");
 
 }
 
