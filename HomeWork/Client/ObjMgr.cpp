@@ -47,7 +47,7 @@ void CObjMgr::SetObject(const wstring& _sceneKey)
 				newObj->Initialize();
 				dynamic_cast<CEnvironment*>(newObj)->SetImgCount(it.iCount);
 				newObj->Set_Pos(it.vPos);
-				Add_Object(CObjMgr::MONSTER, newObj);
+				Add_Object(CObjMgr::UI, newObj);
 
 			}
 			else {
@@ -93,6 +93,8 @@ HRESULT CObjMgr::Initialize()
 	//ReadMapData(L"../Data/MapData/Town.dat", L"Town");
 
 	ReadObjectData(L"../Data/ObjectData/Town1.dat", L"Town1");
+	ReadObjectData(L"../Data/ObjectData/TempDeongeon.dat", L"TempDeongeon");
+
 	return S_OK;
 }
 

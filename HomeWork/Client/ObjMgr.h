@@ -11,7 +11,7 @@ class CObjMgr final
 	DECLARE_SINGLETON(CObjMgr)
 
 public:
-	enum ID { MONSTER, PLAYER, EFFECT, UI, END };
+	enum ID { PLAYER, EFFECT, UI, MONSTER, END };
 
 private:
 	CObjMgr();
