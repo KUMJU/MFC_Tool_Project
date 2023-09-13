@@ -3,6 +3,7 @@
 #include "Stage.h"
 #include "Logo.h"
 #include "Town.h"
+#include"ObjMgr.h"
 
 IMPLEMENT_SINGLETON(CSceneMgr)
 
@@ -26,6 +27,7 @@ HRESULT CSceneMgr::Change_SceneMgr(ID eID)
 	if (m_eCurScene != m_eNextScene)
 	{
 		Safe_Delete(m_pScene); 
+		CObjMgr::Get_Instance()->DeleteObj();
 
 		switch (m_eNextScene)
 		{

@@ -58,4 +58,6 @@ public:
 	void InsertNewObj(CString _objKey , D3DXVECTOR3 _pos);
 	afx_msg void OnDeleteObj();
 	afx_msg void OnDeleteObjAll();
+	afx_msg void OnBnClickedRadio1();
+	afx_msg void OnBnClickedRadio2();
 };

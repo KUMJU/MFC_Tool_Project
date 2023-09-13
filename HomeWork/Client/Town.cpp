@@ -23,6 +23,8 @@ HRESULT CTown::Ready_Scene()
     // ÁöÇü
     CObjMgr::Get_Instance()->Change_CurTerrain(L"Town1");
     m_pPlayer = CObjMgr::Get_Instance()->Get_Player();
+    CObjMgr::Get_Instance()->SetObject(L"Town1");
+
 
     D3DXVECTOR3 InitPos = { 1000.f,700.f,0.f };
     m_pPlayer->Set_Pos(InitPos);

@@ -22,7 +22,6 @@ CUnitTool::CUnitTool(CWnd* pParent /*=nullptr*/)
 	, m_iB(0)
 	, fSpeed(0)
 	, m_ObjKey(_T(""))
-	, m_fAnimTime(0)
 	, m_iImgCount(0)
 	, m_strImgSize(_T(""))
 	, m_strTexType(_T(""))
@@ -47,7 +46,6 @@ void CUnitTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST3, m_ListCtrl);
 	DDX_Text(pDX, IDC_EDIT5, m_ObjKey);
 	DDX_Control(pDX, IDC_COMBO1, m_ComboBox);
-	DDX_Text(pDX, IDC_TEXT4, m_fAnimTime);
 	DDX_Text(pDX, IDC_TEXT3, m_iImgCount);
 	DDX_Text(pDX, IDC_TEXT2, m_strImgSize);
 	DDX_Text(pDX, IDC_TEXT1, m_strTexType);
@@ -399,7 +397,6 @@ void CUnitTool::OnSelectList(NMHDR* pNMHDR, LRESULT* pResult)
 			m_SliderB.SetPos(m_iB);
 
 			m_iImgCount = it->iCount;
-			m_fAnimTime = it->fSpeed;
 
 			m_strTexType = "MULTI";
 
@@ -468,7 +465,6 @@ void CUnitTool::OnDropDownSelChange()
 			m_SliderB.SetPos(m_iB);
 
 			m_iImgCount = it->iCount;
-			m_fAnimTime = it->fSpeed;
 
 			if (1 == m_iImgCount) {
 				m_strTexType = "SINGLE";

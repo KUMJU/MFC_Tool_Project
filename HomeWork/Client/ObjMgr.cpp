@@ -5,6 +5,7 @@
 #include "MyTerrain.h"
 
 #include"Monster.h"
+#include"Environment.h"
 
 IMPLEMENT_SINGLETON(CObjMgr)
 
@@ -32,24 +33,45 @@ void CObjMgr::Change_CurTerrain(const wstring& TerrainKey)
 void CObjMgr::SetObject(const wstring& _sceneKey)
 {
 	auto iter = m_ObjList.find(_sceneKey);
+
+	if (m_ObjList.end() == iter)
+		return;
+
 	CObj* newObj;
 
 	if (m_ObjList.end() != iter) {
 		for (auto& it : iter->second) {
-			if (it.strObjKey == L"Boss") {
+			if (it.strObjKey == L"Object") {
+				newObj = new CEnvironment;
+				newObj->SetKeyName(it.strObjKey, it.strStateKey);
+				newObj->Initialize();
+				dynamic_cast<CEnvironment*>(newObj)->SetImgCount(it.iCount);
+				newObj->Set_Pos(it.vPos);
+				Add_Object(CObjMgr::MONSTER, newObj);
+
+			}
+			else {
 				newObj = new CMonster;
 				newObj->SetKeyName(it.strObjKey, it.strStateKey);
-
+				newObj->Set_Pos(it.vPos);
+				newObj->Initialize();
+				Add_Object(CObjMgr::MONSTER, newObj);
 			}
-			else if (it.strObjKey == L"BlueWolf") {
-
-			}
-
-
-
 		}
 	}
 
+
+}
+
+void CObjMgr::DeleteObj()
+{
+	for (auto&& iter = m_listObject[MONSTER].begin(); iter != m_listObject[MONSTER].end(); ++iter )
+	{
+		Safe_Delete<CObj*>(*iter);
+		
+	}
+
+	m_listObject[MONSTER].clear();
 
 }
 
@@ -70,7 +92,7 @@ HRESULT CObjMgr::Initialize()
 	//ReadMapData(L"../Data/MapData/Shop.dat", L"Shop");
 	//ReadMapData(L"../Data/MapData/Town.dat", L"Town");
 
-	ReadObjectData(L"../Data/MapData/Deongeon.dat", L"Deongeon");
+	ReadObjectData(L"../Data/ObjectData/Town1.dat", L"Town1");
 	return S_OK;
 }
 
@@ -164,7 +186,7 @@ void CObjMgr::ReadObjectData(const wstring& DataPath , const wstring& KeyName)
 	DWORD dwByte(0), dwStrByte(0);
 	
 	OBJINFO objInfo;
-
+	list<OBJINFO> tempList;
 	while (true)
 	{
 		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
@@ -175,7 +197,7 @@ void CObjMgr::ReadObjectData(const wstring& DataPath , const wstring& KeyName)
 		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
 		TCHAR* pName2 = new TCHAR[dwStrByte];
 		ReadFile(hFile, pName2, dwStrByte, &dwByte, nullptr);
-		objInfo.strObjKey = pName2;
+		objInfo.strStateKey = pName2;
 
 		ReadFile(hFile, &objInfo.IsReverse, sizeof(bool), &dwByte, nullptr);
 		ReadFile(hFile, &objInfo.iCount, sizeof(int), &dwByte, nullptr);
@@ -187,12 +209,12 @@ void CObjMgr::ReadObjectData(const wstring& DataPath , const wstring& KeyName)
 			delete[] pName2;
 			break;
 		}
-		
-		list<OBJINFO> tempList;
-		tempList.push_back(objInfo);
 
-		m_ObjList.insert({ KeyName , tempList });
+		tempList.push_back(objInfo);
 	}
+
+	if(!tempList.empty())
+		m_ObjList.insert({ KeyName , tempList });
 
 
 	CloseHandle(hFile);

@@ -15,12 +15,12 @@
 #define IDC_BUTTON1                     1000
 #define IDC_EDIT1                       1001
 #define IDC_BUTTON4                     1001
-#define IDC_EDIT2                       1002
 #define IDC_BUTTON8                     1002
-#define IDC_EDIT3                       1003
+#define IDC_EDIT2                       1002
 #define IDC_BUTTON9                     1003
-#define IDC_EDIT4                       1004
+#define IDC_EDIT3                       1003
 #define IDC_BUTTON10                    1004
+#define IDC_EDIT4                       1004
 #define IDC_LIST2                       1005
 #define IDC_EDIT5                       1005
 #define IDC_BUTTON11                    1006

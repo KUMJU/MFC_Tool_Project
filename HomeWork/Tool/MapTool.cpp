@@ -50,6 +50,8 @@ BEGIN_MESSAGE_MAP(CMapTool, CDialog)
 	ON_LBN_SELCHANGE(IDC_LIST6, &CMapTool::OnObjSelect)
 	ON_BN_CLICKED(IDC_BUTTON10, &CMapTool::OnDeleteObj)
 	ON_BN_CLICKED(IDC_BUTTON11, &CMapTool::OnDeleteObjAll)
+	ON_BN_CLICKED(IDC_RADIO1, &CMapTool::OnBnClickedRadio1)
+	ON_BN_CLICKED(IDC_RADIO2, &CMapTool::OnBnClickedRadio2)
 END_MESSAGE_MAP()
 
 
@@ -371,6 +373,8 @@ BOOL CMapTool::OnInitDialog()
 		}
 	}
 
+	m_TileSelecter.EnableWindow(FALSE);
+
 	//리스트 세팅 
 	CString tpath = _T("../Texture");
 	SetObjList(tpath, L"");
@@ -452,4 +456,41 @@ void CMapTool::OnDeleteObjAll()
 
 	pMainView->DeleteObjAll();
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CMapTool::OnBnClickedRadio1()
+{//오브젝트 모드
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	m_TileSelecter.EnableWindow(FALSE);
+
+	m_ObjList.EnableWindow(TRUE);
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+	CToolView* pMainView = dynamic_cast<CToolView*>(pMain->m_MainSplitter.GetPane(0, 1));
+
+	if (nullptr == pMainView)
+		return;
+
+
+	pMainView->SetDrawMode(0);
+}
+
+
+void CMapTool::OnBnClickedRadio2()
+{	//타일모드
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	m_ObjList.EnableWindow(FALSE);
+
+	m_TileSelecter.EnableWindow(TRUE);
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+	CToolView* pMainView = dynamic_cast<CToolView*>(pMain->m_MainSplitter.GetPane(0, 1));
+
+	if (nullptr == pMainView)
+		return;
+
+
+	pMainView->SetDrawMode(1);
+
 }

@@ -20,7 +20,11 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureMgr.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
+<<<<<<< Updated upstream
     <ClCompile Include="Town.cpp" />
+=======
+    <ClCompile Include="Environment.cpp" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AstarMgr.h" />
@@ -45,7 +49,11 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureMgr.h" />
     <ClInclude Include="TimeMgr.h" />
+<<<<<<< Updated upstream
     <ClInclude Include="Town.h" />
+=======
+    <ClInclude Include="Environment.h" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />

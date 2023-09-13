@@ -49,6 +49,8 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnDestroy();
 
+	void SetDrawMode(int _mode) { m_iDrawMode = _mode; }
+
 public:
 	
 

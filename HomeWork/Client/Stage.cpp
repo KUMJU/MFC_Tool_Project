@@ -21,6 +21,7 @@ HRESULT CStage::Ready_Scene()
 	// ÁöÇü
 	CObjMgr::Get_Instance()->Change_CurTerrain(L"TempDeongeon");
 	pPlayer = CObjMgr::Get_Instance()->Get_Player();
+	CObjMgr::Get_Instance()->SetObject(L"TempDeongeon");
 
 	D3DXVECTOR3 InitPos = {1050.f,700.f,0.f};
 	pPlayer->Set_Pos(InitPos);

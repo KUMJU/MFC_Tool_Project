@@ -141,7 +141,7 @@ int CMiniAnimView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
-	SetTimer(1, 10, NULL);
+	SetTimer(1, 1, NULL);
 	CTimeMgr::Get_Instance()->Initialize();
 
 	return 0;
@@ -153,7 +153,7 @@ void CMiniAnimView::MoveFrame()
 		return;
 
 
-	m_fActTime += CTimeMgr::Get_Instance()->Get_TimeDelta();
+	m_fActTime += CTimeMgr::Get_Instance()->Get_TimeDelta() * 2;
 
 	if (m_fActTime >= m_currentAnimInfo.fSpeed) {
 		m_fActTime = 0.f;

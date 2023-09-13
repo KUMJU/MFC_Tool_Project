@@ -23,6 +23,7 @@ public:
 	CObj* Get_Player() { return m_listObject[PLAYER].front(); }
 
 	void SetObject(const wstring& _sceneKey);
+	void DeleteObj();
 
 public:
 	void Add_Object(ID eID, CObj* pObject); 

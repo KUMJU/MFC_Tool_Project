@@ -284,6 +284,12 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 
 	CScrollView::OnMouseMove(nFlags, point);
 
+
+
+	m_MousePos.x = point.x;
+	m_MousePos.y = point.y;
+
+
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
 		switch (m_iDrawMode)
@@ -346,7 +352,6 @@ void CToolView::SetCurrentObjTarget(CString _objKey)
 		currentObjKey.strStateKey = "LD";
 	}
 	else {
-
 		currentObjKey.strObjKey = "Object";
 
 		//CString Obj
@@ -393,13 +398,13 @@ void CToolView::SaveObjList(CString DataSavePath)
 		WriteFile(hFile, &(dwStrByte), sizeof(DWORD), &dwByte, nullptr);
 		WriteFile(hFile, iter.strObjKey.GetString(), dwStrByte, &dwByte, nullptr);
 
-		temp1 = iter.strObjKey.GetString();
+		temp1 = iter.strStateKey.GetString();
 		dwStrByte = sizeof(temp1) * sizeof(TCHAR);
 		WriteFile(hFile, &(dwStrByte), sizeof(DWORD), &dwByte, nullptr);
-		WriteFile(hFile, iter.strObjKey.GetString(), dwStrByte, &dwByte, nullptr);
+		WriteFile(hFile, iter.strStateKey.GetString(), dwStrByte, &dwByte, nullptr);
 		
-		WriteFile(hFile, &(iter.iCount), sizeof(int), &dwByte, nullptr);
 		WriteFile(hFile, &(iter.IsReverse), sizeof(bool), &dwByte, nullptr);
+		WriteFile(hFile, &(iter.iCount), sizeof(int), &dwByte, nullptr);
 		WriteFile(hFile, &(iter.vPos), sizeof(D3DXVECTOR3), &dwByte, nullptr);
 	}
 

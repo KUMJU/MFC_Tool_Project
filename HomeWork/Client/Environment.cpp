@@ -1,44 +1,34 @@
 #include "pch.h"
-#include "Monster.h"
-#include"TextureMgr.h"
+#include "Environment.h"
 #include"Device.h"
+#include"TextureMgr.h"
 
-CMonster::CMonster()
+CEnvironment::CEnvironment()
 {
 }
 
-CMonster::~CMonster()
+CEnvironment::~CEnvironment()
 {
 }
 
-HRESULT CMonster::Initialize(void)
+HRESULT CEnvironment::Initialize(void)
 {
-
-    if(m_wstrObjKey == L"BlueWolf" || m_wstrObjKey == L"Boss")
-        m_wstrStateKey = L"STAND_LDOWN";
-    else if(m_wstrObjKey == L"Benya")
-        m_wstrStateKey = L"STAND_DOWN";
-
-    m_spriteInfo = CTextureMgr::Get_Instance()->GetSpriteInfo(m_wstrObjKey, m_wstrStateKey);
-    m_tFrame.fMax = m_spriteInfo.iCount-1;
+    m_iImgCount = 0;
     m_tFrame.fSpeed = m_spriteInfo.fSpeed;
 
 	return S_OK;
 }
 
-int CMonster::Update(void)
+int CEnvironment::Update(void)
 {
 	return S_OK;
 }
 
-void CMonster::Late_Update(void)
+void CEnvironment::Late_Update(void)
 {
-    Move_Frame();
-
-   
 }
 
-void CMonster::Render(void)
+void CEnvironment::Render(void)
 {
     D3DXMATRIX  matWorld, matScale, matTrans;
 
@@ -55,7 +45,7 @@ void CMonster::Render(void)
 
     CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
 
-    const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(m_wstrObjKey.c_str(), m_wstrStateKey.c_str(), static_cast<int>(m_tFrame.fFrame));
+    const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(m_wstrObjKey.c_str(), m_wstrStateKey.c_str(), m_iImgCount);
 
     float fCenterX = pTexInfo->tImgInfo.Width * 0.5f;
     float fCenterY = pTexInfo->tImgInfo.Height * 0.5f;
@@ -68,6 +58,6 @@ void CMonster::Render(void)
         D3DCOLOR_ARGB(m_spriteInfo.iA, m_spriteInfo.iR, m_spriteInfo.iG, m_spriteInfo.iB));
 }
 
-void CMonster::Release(void)
+void CEnvironment::Release(void)
 {
 }
