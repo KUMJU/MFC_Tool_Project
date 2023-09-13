@@ -199,7 +199,7 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 
 	CScrollView::OnMouseMove(nFlags, point);
 
-	if (GetAsyncKeyState(VK_LBUTTON))
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
 		switch (m_iDrawMode)
 		{

@@ -123,6 +123,9 @@
     <ClInclude Include="AstarMgr.h">
       <Filter>06.AstarMgr</Filter>
     </ClInclude>
+    <ClInclude Include="Logo.h">
+      <Filter>02.SceneMgr\Scene\00.Logo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -175,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="AstarMgr.cpp">
       <Filter>06.AstarMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Logo.cpp">
+      <Filter>02.SceneMgr\Scene\00.Logo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

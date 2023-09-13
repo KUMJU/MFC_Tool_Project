@@ -22,7 +22,7 @@ void CMyTerrain::Tile_Change(const D3DXVECTOR3& vPos, int iDrawID, int iDrawOpti
         return;
 
     m_vecTile[iIndex]->byDrawID = iDrawID;
-    m_vecTile[iIndex]->byOption = 1;
+    m_vecTile[iIndex]->byOption = iDrawOption;
 }
 
 int CMyTerrain::Get_TileIndex(const D3DXVECTOR3& vPos)

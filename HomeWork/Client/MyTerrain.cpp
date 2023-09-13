@@ -190,7 +190,12 @@ HRESULT CMyTerrain::Ready_Adj()
                 int tempIndex = (isEven == 0) ? iIndex - (m_iTileCntX + 1) : iIndex - m_iTileCntX;
 
                 // 장애물이 아니라면 넣어주기
-                if(m_vecTile[tempIndex]->byOption != 1)
+                int iTemp = m_vecTile[tempIndex]->byOption;
+                if (iTemp == 2)
+                {
+                    iTemp;
+                }
+                if ((int)(m_vecTile[tempIndex]->byOption) != 1)
                     m_vecAdj[iIndex].push_back(m_vecTile[tempIndex]);
             }
 
