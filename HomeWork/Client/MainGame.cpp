@@ -5,8 +5,9 @@
 #include "TextureMgr.h"
 #include "SceneMgr.h"
 #include "TimeMgr.h"
+#include "Player.h"
 
-CMainGame::CMainGame()
+CMainGame::CMainGame():m_pPlayer(nullptr)
 {
 }
 
@@ -22,7 +23,13 @@ void CMainGame::Initialize()
 	CTextureMgr::Get_Instance()->ReadImgPath(L"../Data/ImgPath.txt");
 	CTextureMgr::Get_Instance()->Initialize();
 	CObjMgr::Get_Instance()->Initialize();
-	CSceneMgr::Get_Instance()->Change_SceneMgr(CSceneMgr::STAGE);
+
+	// 플레이어
+	m_pPlayer = new CPlayer;
+	m_pPlayer->Initialize();
+	CObjMgr::Get_Instance()->Add_Object(CObjMgr::PLAYER, m_pPlayer);
+
+	CSceneMgr::Get_Instance()->Change_SceneMgr(CSceneMgr::TOWN);
 }
 
 void CMainGame::Update()

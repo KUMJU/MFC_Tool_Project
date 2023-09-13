@@ -12,6 +12,8 @@ public:
 public:
 	int		Get_TileCntX() { return m_iTileCntX; }
 	int		Get_TileCntY() { return m_iTileCntY; }
+	const TILE* Get_Tile(int iIndex) { return m_vecTile[iIndex]; }
+	D3DXVECTOR3	Get_BackGroundSize();
 
 	vector<TILE*>&			Get_VecTile() { return m_vecTile; }
 	vector<list<TILE*>>&	Get_VecAdj() { return m_vecAdj; }

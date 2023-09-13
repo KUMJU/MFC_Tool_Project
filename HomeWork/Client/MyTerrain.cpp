@@ -13,6 +13,18 @@ CMyTerrain::~CMyTerrain()
     Release();
 }
 
+D3DXVECTOR3 CMyTerrain::Get_BackGroundSize()
+{
+    const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Map", L"map", m_iBackImgCount);
+
+    float fSizeX = pTexInfo->tImgInfo.Width;
+    float fSizeY = pTexInfo->tImgInfo.Height;
+
+    D3DXVECTOR3 vResult = { fSizeX,fSizeY,0.f };
+
+    return vResult;
+}
+
 HRESULT CMyTerrain::Initialize()
 {
     return E_NOTIMPL;
@@ -20,20 +32,6 @@ HRESULT CMyTerrain::Initialize()
 
 int CMyTerrain::Update()
 {
-    D3DXVECTOR3			vMouse = Get_Mouse();
-
-    if (0.f > vMouse.x)
-        m_vScroll.x += 300.f * CTimeMgr::Get_Instance()->Get_TimeDelta();
-
-    if (WINCX < vMouse.x)
-        m_vScroll.x -= 300.f * CTimeMgr::Get_Instance()->Get_TimeDelta();
-
-    if (0.f > vMouse.y)
-        m_vScroll.y += 300.f * CTimeMgr::Get_Instance()->Get_TimeDelta();
-
-    if (WINCY < vMouse.y)
-        m_vScroll.y -= 300.f * CTimeMgr::Get_Instance()->Get_TimeDelta();
-
     return 0;
 }
 

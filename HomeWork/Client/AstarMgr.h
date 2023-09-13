@@ -14,12 +14,13 @@ public:
 
 public:
 	void	Start_Astar(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vGoal);
+	void	End_Astar() { m_BestList.clear(); }
+	int		Get_TileIdx(const D3DXVECTOR3& vPos);
 	void	Release();
 
 private:
 	bool	Make_Route(int iStartIdx, int iGoalIdx);
 	void	Make_BestList(int iStartIdx, int iGoalIdx);
-	int		Get_TileIdx(const D3DXVECTOR3& vPos);
 	bool	Picking(const D3DXVECTOR3& vPos, const int& iIndex);
 	bool	Check_Close(int iIndex);
 	bool	Check_Open(int iIndex);

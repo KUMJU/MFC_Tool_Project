@@ -14,7 +14,7 @@ typedef	struct tagFrame
 {
 	float		fFrame; // 프레임을 세기 위한 변수
 	float		fMax;	// 최대 이미지의 프레임 수
-
+	float		fSpeed; // 이미지 넘어가는 속도
 }FRAME;
 
 typedef struct tagTexture

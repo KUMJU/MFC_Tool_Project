@@ -4,9 +4,11 @@
 #include "TextureMgr.h"
 #include "AstarMgr.h"
 #include "TimeMgr.h"
+#include "ObjMgr.h"
+#include "MyTerrain.h"
 
 CPlayer::CPlayer()
-    :m_eCurState(PLAYER_STATE::NONE),m_ePrevState(PLAYER_STATE::NONE)
+    :m_ePrevState(STAND_DOWN), m_eCurrentState(STAND_DOWN)
 {
 }
 
@@ -17,28 +19,31 @@ CPlayer::~CPlayer()
 
 HRESULT CPlayer::Initialize(void)
 {
-    m_dwTime = GetTickCount();
     m_wstrObjKey = L"Player";
     m_wstrStateKey = L"STAND_LDOWN";
     m_tFrame.fMax = CTextureMgr::Get_Instance()->Get_TextureCnt(m_wstrObjKey.c_str(), m_wstrStateKey.c_str());
     m_tInfo.vPos = { 700,500,0 };
     m_tInfo.vDir = { 0,0,0 };
-    m_tInfo.vLook = { 0,-1,0 };
+    m_tInfo.vLook = { 1,-1,0 };
 
     m_spriteInfo = CTextureMgr::Get_Instance()-> GetSpriteInfo(m_wstrObjKey, m_wstrStateKey);
-	return S_OK;
+    m_tFrame.fFrame = 0;
+    m_tFrame.fMax = m_spriteInfo.iCount;
+    m_tFrame.fSpeed = m_spriteInfo.fSpeed;
+
+    return S_OK;
 }
 
 int CPlayer::Update(void)
 {
     Key_Input();
-    Update_Move();
-    Update_State();
+
 	return OBJ_NOEVENT;
 }
 
 void CPlayer::Late_Update(void)
 {
+    Update_State();
     Move_Frame();
 }
 
@@ -48,7 +53,10 @@ void CPlayer::Render(void)
 
     D3DXMatrixIdentity(&matWorld);
 
-    D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+    if (m_tInfo.vLook.x < 0)
+        D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+    else
+        D3DXMatrixScaling(&matScale, -1.f, 1.f, 1.f);
 
     D3DXMatrixTranslation(&matTrans,
         m_tInfo.vPos.x + m_vScroll.x,
@@ -59,7 +67,8 @@ void CPlayer::Render(void)
 
     CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
 
-    const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(m_wstrObjKey.c_str(), m_wstrStateKey.c_str(), static_cast<int>(m_tFrame.fFrame));
+    const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(m_wstrObjKey.c_str(), m_wstrStateKey.c_str(),
+        static_cast<int>(m_tFrame.fFrame));
 
     float fCenterX = pTexInfo->tImgInfo.Width * 0.5f;
     float fCenterY = pTexInfo->tImgInfo.Height * 0.5f;
@@ -81,21 +90,78 @@ void CPlayer::Key_Input()
 {
     if (GetAsyncKeyState(VK_LBUTTON))
     {
-        D3DXVECTOR3	vMouse = Get_Mouse() - m_vScroll;
-        CAstarMgr::Get_Instance()->Start_Astar(m_tInfo.vPos, vMouse);
+        m_vDstPos = Get_Mouse() - m_vScroll;
+        CAstarMgr::Get_Instance()->Start_Astar(m_tInfo.vPos, m_vDstPos);
     }
 
     Move_Astar();
 }
 
-void CPlayer::Update_Move()
-{
-}
-
 void CPlayer::Update_State()
 {
+    float magnitude = D3DXVec3Length(&m_tInfo.vDir);
 
+    // 이동 시
+    if (magnitude > 0.1f)
+    {
+            // 위 대각
+            if (m_tInfo.vLook.y < 0)
+            {
+                if (m_ePrevState == RUN_UP)
+                    return;
 
+                m_ePrevState = RUN_UP;
+
+                m_wstrStateKey = L"RUN_LUP";
+                m_spriteInfo = CTextureMgr::Get_Instance()->GetSpriteInfo(m_wstrObjKey, m_wstrStateKey);
+                m_tFrame.fFrame = 0;
+                m_tFrame.fMax = m_spriteInfo.iCount;
+                m_tFrame.fSpeed = m_spriteInfo.fSpeed;
+            }
+            // 아래 대각
+            else if (m_tInfo.vLook.y > 0)
+            {
+                if (m_ePrevState == RUN_DOWN)
+                    return;
+                m_ePrevState = RUN_DOWN;
+
+                m_wstrStateKey = L"RUN_LDOWN";
+                m_spriteInfo = CTextureMgr::Get_Instance()->GetSpriteInfo(m_wstrObjKey, m_wstrStateKey);
+                m_tFrame.fFrame = 0;
+                m_tFrame.fMax = m_spriteInfo.iCount;
+                m_tFrame.fSpeed = m_spriteInfo.fSpeed;
+            }
+    }
+    // 정지 시
+    else
+    {
+        // 위 대각
+        if (m_tInfo.vLook.y < 0)
+        {
+            if (m_ePrevState == STAND_UP)
+                return;
+            m_ePrevState = STAND_UP;
+
+            m_wstrStateKey = L"STAND_LUP";
+            m_spriteInfo = CTextureMgr::Get_Instance()->GetSpriteInfo(m_wstrObjKey, m_wstrStateKey);
+            m_tFrame.fFrame = 0;
+            m_tFrame.fMax = m_spriteInfo.iCount;
+            m_tFrame.fSpeed = m_spriteInfo.fSpeed;
+        }
+        // 아래 대각
+        else if (m_tInfo.vLook.y > 0)
+        {
+            if (m_ePrevState == STAND_DOWN)
+                return;
+            m_ePrevState = STAND_DOWN;
+
+            m_wstrStateKey = L"STAND_LDOWN";
+            m_spriteInfo = CTextureMgr::Get_Instance()->GetSpriteInfo(m_wstrObjKey, m_wstrStateKey);
+            m_tFrame.fFrame = 0;
+            m_tFrame.fMax = m_spriteInfo.iCount;
+            m_tFrame.fSpeed = m_spriteInfo.fSpeed;
+        }
+    }
 }
 
 void CPlayer::Move_Astar()
@@ -104,14 +170,24 @@ void CPlayer::Move_Astar()
 
     if (!BestList.empty())
     {
-        D3DXVECTOR3 vDir = BestList.front()->vPos - m_tInfo.vPos;
+        m_tInfo.vDir = BestList.front()->vPos - m_tInfo.vPos;
         
-        float fDist = D3DXVec3Length(&vDir);
-        D3DXVec3Normalize(&vDir, &vDir);
+        float fDist = D3DXVec3Length(&m_tInfo.vDir);
+        D3DXVec3Normalize(&m_tInfo.vDir, &m_tInfo.vDir);
 
-        m_tInfo.vPos += vDir * 50.f * CTimeMgr::Get_Instance()->Get_TimeDelta();
+        m_tInfo.vLook = m_tInfo.vDir;
+        m_tInfo.vPos += m_tInfo.vDir * 100.f * CTimeMgr::Get_Instance()->Get_TimeDelta();
 
         if (3.f > fDist)
             BestList.pop_front();
     }
+    else
+    {
+        m_tInfo.vDir = { 0.f,0.f,0.f };
+    }
+}
+
+void CPlayer::Stop_Astar()
+{
+    CAstarMgr::Get_Instance()->End_Astar();
 }

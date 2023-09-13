@@ -1,14 +1,14 @@
 #pragma once
 #include "Scene.h"
 
-class CObj;
 class CMyTerrain;
+class CObj;
 
-class CStage :	public CScene
+class CTown : public CScene
 {
 public:
-	CStage();
-	virtual ~CStage();
+	CTown();
+	virtual ~CTown();
 
 public:
 	virtual HRESULT Ready_Scene() override;
@@ -18,6 +18,7 @@ public:
 	virtual void Release_Scene() override;
 
 private:
-	CObj*	pPlayer;
+	CObj* m_pPlayer;
 };
+
 

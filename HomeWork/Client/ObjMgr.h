@@ -20,6 +20,7 @@ private:
 public:
 	void Change_CurTerrain(const wstring& TerrainKey);
 	CMyTerrain* Get_CurTerrain() { return m_pCurrentTerrain; }
+	CObj* Get_Player() { return m_listObject[PLAYER].front(); }
 
 	void SetObject(const wstring& _sceneKey);
 

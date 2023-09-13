@@ -3,6 +3,8 @@
 #include "MultiTexture.h"
 #include "Include.h"
 
+enum PlayerState{RUN_UP, RUN_DOWN, STAND_UP, STAND_DOWN};
+
 class CPlayer :
     public CObj
 {
@@ -18,16 +20,17 @@ public:
     void Render(void) override;
     void Release(void) override;
 
+public:
+    void Stop_Astar();
+
 private:
     void Key_Input();
-    void Update_Move();
     void Update_State();
 
     void Move_Astar();
-
 private:
     D3DXVECTOR3     m_vDstPos;
-    PLAYER_STATE    m_ePrevState;
-    PLAYER_STATE    m_eCurState;
+    PlayerState     m_ePrevState;
+    PlayerState     m_eCurrentState;
 };
 

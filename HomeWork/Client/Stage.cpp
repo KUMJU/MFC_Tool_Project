@@ -2,9 +2,9 @@
 #include "Stage.h"
 #include "TextureMgr.h"
 #include "ObjMgr.h"
-#include "Player.h"
 #include "MyTerrain.h"
 #include "Device.h"
+#include "Obj.h"
 
 CStage::CStage()
 	:pPlayer(nullptr)
@@ -19,28 +19,24 @@ CStage::~CStage()
 HRESULT CStage::Ready_Scene()
 {
 	// 지형
-	CObjMgr::Get_Instance()->Change_CurTerrain(L"Town1");
+	CObjMgr::Get_Instance()->Change_CurTerrain(L"TempDeongeon");
+	pPlayer = CObjMgr::Get_Instance()->Get_Player();
 
-	// 플레이어
-	pPlayer = new CPlayer;
-	if (nullptr == pPlayer)
-		return E_FAIL;
+	D3DXVECTOR3 InitPos = {1050.f,700.f,0.f};
+	pPlayer->Set_Pos(InitPos);
 
-	pPlayer->Initialize();
-
-	CObjMgr::Get_Instance()->Add_Object(CObjMgr::PLAYER, pPlayer);
-	
 	return S_OK;
 }
 
 void CStage::Update_Scene()
 {
 	CObjMgr::Get_Instance()->Update();
-	pPlayer->Update();
 }
 
 void CStage::Late_Update_Scene()
 {
+	__super::UpdateScroll();
+
 	CObjMgr::Get_Instance()->Late_Update();
 }
 

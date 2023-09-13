@@ -22,6 +22,8 @@ public:
 		D3DXVec3Normalize(&m_tInfo.vDir, &m_tInfo.vDir);
 	}
 
+	static void Set_Scroll(const D3DXVECTOR3& vScroll) { m_vScroll = vScroll; }
+
 public:
 	virtual HRESULT		Initialize(void)PURE;
 	virtual int			Update(void)PURE;
@@ -43,11 +45,10 @@ protected:
 
 	INFO					m_tInfo;
 	FRAME					m_tFrame;
+	float					m_fTime;
 
 	wstring					m_wstrObjKey = L"";
 	wstring					m_wstrStateKey = L"";
-
-	DWORD					m_dwTime = NULL;
 
 	SPRITEINFO				m_spriteInfo;
 };

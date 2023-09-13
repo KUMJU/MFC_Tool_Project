@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "SceneMgr.h"
 #include "Stage.h"
+#include "Logo.h"
+#include "Town.h"
 
 IMPLEMENT_SINGLETON(CSceneMgr)
 
@@ -28,6 +30,11 @@ HRESULT CSceneMgr::Change_SceneMgr(ID eID)
 		switch (m_eNextScene)
 		{
 		case CSceneMgr::LOGO:
+			m_pScene = new CLogo;
+			break;
+
+		case CSceneMgr::TOWN:
+			m_pScene = new CTown;
 			break;
 
 		case CSceneMgr::STAGE:

@@ -1,4 +1,6 @@
 #pragma once
+class CPlayer;
+
 class CMainGame
 {
 public:
@@ -12,6 +14,7 @@ public:
 	void	Render();
 	void	Release();
 
-
+private:
+	CPlayer* m_pPlayer;
 };
 
